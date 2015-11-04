@@ -20,66 +20,75 @@
 function pboxes_new_box_dialog() {
 	?>
 	<div id="pboxes_dialog" style="display:none;">
-		<div id="pboxes_shortcode_dialog">
+		<div class="pboxes_shortcode_dialog">
+			<div class="pboxes_shortcode_dialog_header premise-clear-float">
+				<a href="javascript:void(0);" id="pboxes_insert_shortcode_btn">
+					<i class="fa fa-check"></i>
+				</a>
+				<a href="javascript:void(0);" onclick="wp.mce.pboxes.closeDialog()" id="pboxes_close_dialog">
+					<i class="fa fa-times"></i>
+				</a>
+				<h3>Insert A Box</h3>
+			</div>
 			<div class="pboxes_shortcode_dialog_inner">
+				
 				<form id="pboxes_box_form">
-					<?php 
-
-					$elements = array(
-						'div' => 'div', 
-						'span' => 'span', 
-						'section' => 'section', 
-						'article' => 'article', 
-					);
-
-					premise_field( 'select', 
-						array( 
-							'name' => 'pboxes_type', 
-							'options' => $elements, 
-						) 
-					);
-
-					premise_field( 'text', 
-						array( 
-							'name' => 'pboxes_id', 
-							'placeholder' => 'id', 
-						) 
-					);
-
-					premise_field( 'text', 
-						array( 
-							'name' => 'pboxes_class', 
-							'placeholder' => 'class', 
-						) 
-					);
-
-					premise_field( 'textarea', 
-						array( 
-							'name' => 'pboxes_style', 
-							'placeholder' => 'style', 
-						) 
-					);
-
-					premise_field( 'textarea', 
-						array( 
-							'name' => 'pboxes_attributes', 
-							'placeholder' => 'attributes', 
-						) 
-					);
-
-					?>
-
-					<div class="premise-clear" style="margin-bottom: 30px;"></div>
-
-					<div class="premise-float-right">
+					
+					<div id="pboxes_box_atts">
+						
+						<div class="pboxes_box_wp_editor">
+							<?php wp_editor( '', 'pboxes_box_content', array( 'teeny' => true ) ); ?>
+						</div>
 
 						<?php 
-						// display the button
-						premise_field( 'button', array( 'id' => 'pboxes_insert_shortcode_btn', 'value' => 'Insert Shortcode' ) ); ?>
 
+						// To support multiple elements in the future
+						// currently only div is supported
+						// $elements = array(
+						// 	'div' => 'div', 
+						// 	'span' => 'span', 
+						// 	'section' => 'section', 
+						// 	'article' => 'article', 
+						// );
+
+						// premise_field( 'select', 
+						// 	array( 
+						// 		'name' => 'pboxes_type', 
+						// 		'options' => $elements, 
+						// 	) 
+						// );
+
+						$options = array(
+							array( 
+								'type' => 'text', 
+								'name' => 'pboxes_id', 
+								'placeholder' => 'id', 
+								'label' => 'id Attribute', 
+							), 
+							array( 
+								'type' => 'text', 
+								'name' => 'pboxes_class', 
+								'placeholder' => 'class', 
+								'label' => 'class  Attribute', 
+							), 
+							array( 
+								'type' => 'text', 
+								'name' => 'pboxes_style', 
+								'placeholder' => 'style', 
+								'label' => 'style  Attribute', 
+							), 
+							array( 
+								'type' => 'text', 
+								'name' => 'pboxes_attributes', 
+								'placeholder' => 'data-msg="You clicked Me!" onclick="alert(this.data-msg);"', 
+								'label' => 'Additional  Attributes', 
+							),
+						);
+
+						premise_field_section( $options );
+						?>
 					</div>
-
-					<div class="premise-clear" style="margin-bottom: 30px;"></div>
+					
 				</form>
 			</div>
 		</div>

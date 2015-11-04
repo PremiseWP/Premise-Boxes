@@ -3,25 +3,30 @@
  */
 jQuery(document).ready(function($) {
     
-    // create tinyMCE plugin for Boxes and bind button
+    // create tinyMCE plugin for Premise Boxes and bind button
     tinymce.create('tinymce.plugins.pboxes_add_box_plugin', {
+        
         init : function(ed, url) {
-                // Register command for when button is clicked
-                ed.addCommand('pboxes_add_box_plugin_btn', function() {
-                    selected = tinyMCE.activeEditor.selection.getContent();
 
-                    // Initiate our shortcode object
-                    // PboxesShortcode.init(selected);
-                    wp.mce.pboxes.init(ed, selected);
-                });
+            // Register command for when button is clicked
+            ed.addCommand('pboxes_add_box_plugin_btn', function() {
+        
+                // get the selected content
+                selected = tinyMCE.activeEditor.selection.getContent();
+
+                // Open dialog and pass the current editor
+                wp.mce.pboxes.init();
+
+            });
 
             // Register buttons - trigger above command when clicked
             ed.addButton('pboxes_add_box_button', {title : 'Insert shortcode', cmd : 'pboxes_add_box_plugin_btn', image: url + '/buttons/add_box_icon.png' });
-        },   
+        },
+
     });
 
     // Register our TinyMCE plugin
-    // first parameter is the button ID1
+    // first parameter is the button ID
     // second parameter must match the first parameter of the tinymce.create() function above
     tinymce.PluginManager.add('pboxes_add_box_button', tinymce.plugins.pboxes_add_box_plugin);
 });
@@ -33,10 +38,24 @@ jQuery(document).ready(function($) {
     
     wp.mce = wp.mce || {};
 
+    /**
+     * Premise Boxes
+     * 
+     * @type {Object}
+     */
     wp.mce.pboxes = {
 
         /**
-         * The active editor
+         * The WP default editor
+         * 
+         * @type {Object}
+         */
+        wpEditor: {},
+
+
+
+        /**
+         * The box content editor
          * 
          * @type {Object}
          */
@@ -45,12 +64,23 @@ jQuery(document).ready(function($) {
 
 
         /**
-         * Holds The content selected by user 
-         * before opening shortcode
+         * Holds box content
          * 
          * @type {String}
          */
-        innerContent: '',
+        boxContent: '',
+
+
+
+
+        /**
+         * Holds shrtocdes attributes
+         *
+         * by default we the property 'type' must be div for now
+         * 
+         * @type {Array}
+         */
+        box: {},
 
 
 
@@ -58,8 +88,7 @@ jQuery(document).ready(function($) {
         /**
          * Template for our shortcode
          *
-         * Allows us to toggle between views on our
-         * shortcodes.
+         * Allows us to toggle between views on our shortcodes.
          *
          * @see /templates/tmpl-pboxes.html
          * 
@@ -71,23 +100,7 @@ jQuery(document).ready(function($) {
 
 
         /**
-         * Holds the data that will be passed to the template
-         *
-         * This data consists of the attributes inserted in the
-         * shortcode tag. The data is organized into an array of
-         * objects. i.e. {name: "pboxes_box[type]", value: "div"}
-         * 
-         * @type {Array}
-         */
-        data: {},
-
-
-
-
-        /**
-         * Holds the dialogId attribute
-         *
-         * May be changed.
+         * Holds the dialog id attribute
          * 
          * @type {String}
          */
@@ -97,44 +110,82 @@ jQuery(document).ready(function($) {
 
 
         /**
-         * Initiate our shortcode
+         * Init
          * 
-         * @param  {Object} editor   tiniMCE.activeEditor object
-         * @param  {string} selected content selected from the editor
+         * Reset our object. Bind events. Open dialog.
+         * 
          * @return {void}            contruct our object and opens shortcode dialog
          */
-        init: function(editor, selected){
+        init: function() {
 
-            this.editor = editor;
-            console.log(this.editor.selection.getContent());
-            this.innerContent = selected;
-            
-            this.dialog = $(this.dialogId);
+            this.resets();
 
-            this.openDialog();
+            // get the wp editor selected content
+            this.boxContent = this.wpEditor.selection.getContent();
+
+            this.bindEvents();
+
+            this.setBox();
+        },
+
+
+
+        /**
+         * Bind Events
+         * 
+         * @return {void} binds events needed for pboxes to work properly
+         */
+        bindEvents: function() {
+            // add events here
         },
 
 
 
 
         /**
-         * Open Box shortcode dialog
+         * setBox 
          *
-         * @return {void}
+         * Prefills the dialog's form with the values from the shortcode attributes.
+         * It also resets the form (obviously!) then opens the dialog
+         *
+         * @param {object}  box shortcode params
+         * @return {string}     values for dialog fields
+         */
+        setBox: function( box ) {
+            box = box || {};
+
+            var self = wp.mce.pboxes,
+            fields   = $('#pboxes_box_atts').find('[name^=pboxes_]');
+
+            // loop through fields and prefill form
+            fields.each(function(i,v) {
+                // get the raw key to be able to match to our object
+                // '7' == 'pboxes_'
+                var _key = v.id.substr(7);
+
+                if ( 'box_content' == _key ) {
+                    self.editor.setContent(self.boxContent);
+                }
+                else {
+                    v.value = box.hasOwnProperty(_key) ? box[_key] : '';
+                }
+            });
+
+            self.openDialog();
+        },
+
+
+
+
+        /**
+         * Open Dialog
+         *
+         * @return {bolean} false
          */
         openDialog: function() {
 
-            var values = values || [];
-
-            /**
-             * Set Content
-             *
-             * Clears the content on the editor and inserts selected content if any.
-             */
-
-
             // Show the dialog
-            this.dialog.fadeIn();
+            $(this.dialogId).fadeIn();
 
             // Bind Insert btn once only
             jQuery(document).off('click').on('click', '#pboxes_insert_shortcode_btn', wp.mce.pboxes.insertBox);
@@ -145,27 +196,37 @@ jQuery(document).ready(function($) {
 
 
 
+        /**
+         * Insert Box
+         * 
+         * @return {string} insert shortcode into WP post editor
+         */
         insertBox: function() {
-            // Get all shortcode attributes
-            // shorten our object for later
-            var options = $('#pboxes_box_form').serializeArray(),
-            self = wp.mce.pboxes,
-            s = '[pboxes';
 
+            var self = wp.mce.pboxes,
+            options  = $('#pboxes_box_form').serializeArray(),
+            s        = '[pboxes type="div"', // by default element is a div
+            content  = self.editor.getContent();
+
+            console.log(content);
+
+            // Loop through options
+            // parse shortcode string
+            // save options and content
             for ( var i = 0; i < options.length; i++ ) {
-                ( options[i].value !== '' ) ? s += ' ' + options[i].name + '="' + options[i].value + '"' : '';
-                self.data[options[i].name] = options[i].value;
+                
+                // remove 'pboxes_' from name attr
+                var _key = options[i].name.substr(7);
+                ( '' !== options[i].value && 'box_content' !== _key ) ? s += ' ' + _key + '="' + options[i].value + '"' : '';
+            }
+            // parse shortcode content if any
+            if ( '' !== content ) {
+                s += ']' + content + '[/pboxes';
             }
 
-
-            if ( self.innerContent !== '' ) {
-                s += ']' + self.innerContent + '[/pboxes';
-                self.data["innerContent"] = self.innerContent;
-            }
-
-            s += ']';
+            s += ']'; // close shortcode
             
-            self.editor.insertContent( s );
+            self.wpEditor.insertContent( s );
 
             self.closeDialog();
         },
@@ -173,28 +234,70 @@ jQuery(document).ready(function($) {
 
 
 
+        /**
+         * get Content
+         * 
+         * @return {string} shortcode string or template
+         */
         getContent: function() {
-            var options = this.shortcode.attrs.named;
-            options['innerContent'] = this.shortcode.content;
-            return this.template(options);
+            var box = this.shortcode.attrs.named;
+            box.innerContent = this.shortcode.content;
+
+            return this.template(box);
         },
 
 
 
 
+        /**
+         * Edit shortcode
+         * 
+         * @param  {object}   data   shortcode object
+         * @param  {function} update callback function
+         * @return {void}            loads dialog
+         */
         edit: function( data, update ) {
-            var shortcode_data = wp.shortcode.next(shortcode_string, data);
-            var values = shortcode_data.shortcode.attrs.named;
-            values['innercontent'] = shortcode_data.shortcode.content;
-            wp.mce.pboxes.init(tinyMCE.activeEditor, shortcode_data.shortcode.content);
+            
+            var self       = wp.mce.pboxes,
+            shortcode_data = wp.shortcode.next(shortcode_string, data);
+
+            self.resets();
+
+            var box = shortcode_data.shortcode.attrs.named;
+            self.boxContent = shortcode_data.shortcode.content;
+            self.setBox( box );
         },
 
 
 
 
+        /**
+         * close the dialog
+         * 
+         * @return {void} closes the dialog
+         */
         closeDialog: function() {
-            // Close the dialog
-            this.dialog.fadeOut();
+            $(this.dialogId).fadeOut();
+            return false;
+        },
+
+
+
+
+        /**
+         * Resets
+         *
+         * Basically constructs our object. called it resets because it will
+         * reset our parameters everytime we need to. Sets the wpEditor object,
+         * the box content editor object, and starts with a clean box (shortcode attributes) object
+         * 
+         * @return {void} resets our object
+         */
+        resets: function() {
+
+            this.wpEditor = tinyMCE.get('content') || {};
+
+            this.editor = tinyMCE.get('pboxes_box_content') || {};
         }
     }
 

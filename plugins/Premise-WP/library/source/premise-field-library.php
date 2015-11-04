@@ -110,7 +110,7 @@ function premise_field_section( $args = array(), $echo = true ) {
 	$html = ''; // Start with a clean section
 
 	foreach( $args as $k => $v ) {
-		$html .= is_array( $v ) ? premise_field( $k, $v, $echo ) : premise_field( $v, '', $echo );
+		$html .= is_array( $v ) ? premise_field( $k, $v, false ) : premise_field( $v, '', false );
 	}
 
 	if( ! $echo )

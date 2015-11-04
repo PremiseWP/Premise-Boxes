@@ -1,16 +1,16 @@
 <script type="text/html" id="tmpl-pboxes">
-	<{{ data.pboxes_type }} 
-		<# if ( data.pboxes_id ) { #>
-			 id="{{ data.pboxes_id }}"
+	<{{ data.type }} 
+		<# if ( data.id ) { #>
+			 id="{{ data.id }}"
 		<# } #>
-		 class="pboxes_box {{ data.pboxes_class }}"
-		<# if ( data.pboxes_style ) { #>
-			 style="{{ data.pboxes_style }}"
+		 class="pboxes_box {{ data.class }}"
+		<# if ( data.style ) { #>
+			 style="{{ data.style }}"
 		<# } #>
-		<# if ( data.pboxes_attributes ) { #>
-			 {{ data.pboxes_attributes }}
+		<# if ( data.attributes ) { #>
+			 {{ data.attributes }}
 		<# } #>
 		>
 		{{ data.innerContent }}
-	</{{ data.pboxes_type }}>
+	</{{ data.type }}>
 </script>

@@ -1,21 +1,86 @@
 /**
- *
- * 
+ * Pboxes Dailog Styles
  */
-
-
-
 #pboxes_dialog {
 	position: fixed;
-	top: 20%;
-	left: 20%;
-	width: 60%;
-	height: 60%;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	z-index: 99999;
-	background: #fff;
-	border: 1px solid #fff;
-	box-shadow: 0 0 2px #444;
+	background: rgba(255, 255, 255, 0.6);
 	padding: 20px;
+	overflow: hidden;
+}
+
+#pboxes_dialog .pboxes_shortcode_dialog {
+	position: relative;
+	height: 100%;
+	background: #fff;
+	box-sizing: border-box !important; /* always important */
+	border: 1px solid #ccc;
+}
+
+#pboxes_dialog .pboxes_shortcode_dialog_header {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 20px;
+	height: 65px;
+}
+
+#pboxes_dialog #pboxes_close_dialog,
+#pboxes_dialog #pboxes_insert_shortcode_btn {
+	position: absolute;
+	top: 0;
+	height: 64px;
+	width: 65px;
+	line-height: 65px;
+	text-align: center;
+	font-size: 2.5em;
+	background: #fff;
+	transition: all .8s ease;
+}
+
+#pboxes_dialog #pboxes_close_dialog {
+	right: 0;
+	color: #444; /* same as h3 */
+}
+
+#pboxes_dialog #pboxes_close_dialog:hover {
+	background: #444;
+	color: #fff;
+}
+
+#pboxes_dialog #pboxes_insert_shortcode_btn {
+	right: 66px;
+	color: #27b4b4;
+}
+
+#pboxes_dialog #pboxes_insert_shortcode_btn:hover {
+	background: #27b4b4;
+	color: #fff;
+}
+
+#pboxes_dialog .pboxes_shortcode_dialog_header h3 {
+	font-size: 2em;
+	line-height: 40px;
+	margin: .4em 0 .4em .8em;
+}
+
+#pboxes_dialog .pboxes_shortcode_dialog_inner {
+	position: relative;
+	height: 100%;
+	padding: 85px 40px 40px; /* allow some space for header + 20px */
+	overflow: auto;
+}
+
+#pboxes_dialog .pboxes_box_wp_editor {
+	margin-bottom: 20px;
 }
 
 #pboxes_dialog .pboxes-loading-icon {
@@ -28,4 +93,8 @@
 	margin: -25px 0 0 -25px;
 	font-size: 3em;
 	text-align: center;
+}
+
+#pboxes_dialog #pboxes_box_content_ifr {
+	min-height: 300px;
 }
