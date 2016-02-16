@@ -1,0 +1,47 @@
+/**
+ * Responsive Styles
+ *
+ * written in a mobile-first approach. The default styles are for mobile
+ * and we correct for bigger screens
+ */
+
+/**
+ * @1024px - iPad
+ */
+@media screen and (min-width: 1024px) {
+	body.wp-admin #pboxes_dialog {
+		padding: 60px;
+	}
+
+	body.wp-admin #pboxes_dialog .pboxes_shortcode_dialog_inner {
+		padding: 105px 40px 40px;
+	}
+
+	body.wp-admin #pboxes_dialog #pboxes_box_content_ifr {
+		min-height: 300px;
+	}
+}
+
+
+/**
+ * @1300px - Desktops
+ */
+@media screen and (min-width: 1300px) {
+	body.wp-admin #pboxes_dialog {
+		padding: 10%
+	}
+
+	body.wp-admin #pboxes_dialog #pboxes_box_content_ifr {
+		min-height: 400px;
+	}
+}
+
+
+/**
+ * @1600px - Desktops
+ */
+@media screen and (min-width: 1600px) {
+	body.wp-admin #pboxes_dialog {
+		padding: 10% 20%
+	}
+}

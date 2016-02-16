@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 			},
 			livereload: {
 				// reload page when css, js, images or php files changed
-				files: ['css/*.css', 'js/*.js', 'shortcodes/js/*.js', 'img/**/*.{png,jpg,jpeg,gif,webp,svg}', '**/*.php']
+				files: ['**/*.css', 'js/*.js', 'shortcodes/js/*.js', 'img/**/*.{png,jpg,jpeg,gif,webp,svg}', '**/*.php']
 			},
 		},
 

@@ -37,7 +37,15 @@ function pboxes_new_box_dialog() {
 					<div id="pboxes_box_atts">
 						
 						<div class="pboxes_box_wp_editor">
-							<?php wp_editor( '', 'pboxes_box_content', array( 'teeny' => true ) ); ?>
+							<?php 
+							
+							wp_editor( 
+								'', 
+								'pboxes_box_content', 
+								array( 
+									'teeny' => false,
+								)
+							); ?>
 						</div>
 
 						<?php 

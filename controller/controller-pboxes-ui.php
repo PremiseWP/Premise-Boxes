@@ -114,6 +114,106 @@ class PBoxes_UI {
 	public function render_ui() {
 
 		wp_nonce_field( 'pboxes_ui_editor', 'pboxes_ui_nonce' );
+
+		$renders = array( 
+			'controls' => array(
+				array( 
+					'type' => 'text', 
+					'name' => 'pboxes_id', 
+					'placeholder' => 'id', 
+				), 
+				array( 
+					'type' => 'text', 
+					'name' => 'pboxes_class', 
+					'placeholder' => 'class', 
+				), 
+				array( 
+					'type' => 'text', 
+					'name' => 'pboxes_style', 
+					'placeholder' => 'style', 
+				)
+			),
+
+
+			'styles_1' => array(
+				array( 
+					'type' => 'text', 
+					'name' => 'pboxes_margin', 
+					'placeholder' => 'margin', 
+				), 
+				array( 
+					'type' => 'text', 
+					'name' => 'pboxes_padding', 
+					'placeholder' => 'padding',
+					'wrapper_class' => 'premise-align-center'
+				), 
+				array( 
+					'type' => 'wp_color', 
+					'name' => 'pboxes_background', 
+					'placeholder' => 'background', 
+					'wrapper_class' => 'premise-align-center'
+				)
+			)
+		);
+
+		$this->loop_renders( $renders );
+
+
+
+		// output update button
+		premise_field( 'button', array(
+				'id' => 'pboxes_ui_update_btn',
+				'value' => 'Update!',
+				'wrapper_class' => 'premise-float-right',
+			)
+		);
+	}
+
+
+
+
+	public function loop_renders( $renders = array() ) {
+		// validate and do everything we are supposed to
+		// start with active box
+		$_html = '<div id="pboxes_ui_active_box"><span>Active Box</span></div>';
+		foreach ( $renders as $render => $fields ) {
+			if ( ! is_array( $fields ) ) return false;
+
+			// display the buttons
+			$btns = '<div class="pboxes_ui_render_selection pboxes_ui_'.$render.'_selection">';
+			for ( $i = 0; $i < count( $fields ); $i++ ) {
+				if ( ! is_array( $fields[$i] ) ) return false;
+				$btns .= '<a href="javascript:;" class="pboxes_ui_'.$render.'_selection_id';
+				$btns .= 0 === $i ? ' pboxes_active' : '';
+				$btns .= '">'.$fields[$i]["placeholder"].'</a>';
+				$btns .= ( $i < count( $fields ) - 1 ) ? '|' : '';
+			}
+			$btns .= '</div>';
+
+			// begin the render 
+			$_html .= '<div id="pboxes_ui_'.$render.'" class="pboxes_ui_render premise-clear-float">'.$btns;
+
+			$_html .= premise_field_section( $fields, false );
+
+			$_html .= '</div>';
+		}
+
+		echo $_html;
+
+	}
+
+
+
+
+	public function render_wrapper($html) {
+		$_html = '<div class="pboxes_ui_controls_selection">
+					<a href="javascript:;" class="pboxes_ui_controls_selection_id pboxes_active">ID</a> |
+					<a href="javascript:;" class="pboxes_ui_controls_selection_class">CLASS</a> |
+					<a href="javascript:;" class="pboxes_ui_controls_selection_styles">STYLE</a>
+					'.$html.'
+				</div>';
+
+		return '<div id="pboxes_ui_controls" class="pboxes_ui_render premise-clear-float">' . $_html . '</div>';
 	}
 
 
@@ -196,8 +296,8 @@ class PBoxes_UI {
 				'Premise Boxes UI',
 				array( $this, 'render_ui' ),
 				$screen,
-				'normal',
-				'high'
+				'side',
+				'core'
 			);
 		}
 	}

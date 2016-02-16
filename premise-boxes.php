@@ -161,6 +161,8 @@ class Premise_Boxes {
 		add_action( 'admin_footer', array( $this, 'insert_editor' ) );
 
 		add_action( 'print_media_templates', array( $this, 'media_templates' ) );
+
+		add_filter('mce_external_plugins', array( $this, 'my_custom_plugins' ) );
 	}
 
 
@@ -195,7 +197,30 @@ class Premise_Boxes {
 	 * @return string html for editor dialog
 	 */
 	public function insert_editor() {
-		pboxes_new_box_dialog();
+		add_filter('mce_buttons', array( $this, 'pboxes_add_vb_btn' ), 'pboxes_box_content' );
+		// pboxes_new_box_dialog();
+	}
+
+
+
+
+	public function pboxes_add_vb_btn($buttons) {
+		$buttons[] = "visualblocks";
+		array_unshift( $buttons, 'styleselect' );
+		return $buttons;
+	}
+
+
+
+	public function my_custom_plugins () {
+	     $plugins = array('visualblocks'); //Add any more plugins you want to load here
+	     $plugins_array = array();
+
+	     //Build the response - the key is the plugin name, value is the URL to the plugin JS
+	     foreach ($plugins as $plugin ) {
+	     	$plugins_array[ $plugin ] = plugins_url('plugins/', __FILE__) . 'tinymce/' . $plugin . '/plugin.js';
+	     }
+	     return $plugins_array;
 	}
 
 
@@ -210,5 +235,94 @@ class Premise_Boxes {
 
 
 
+function my_mce_before_init_insert_formats( $init_array ) {  
+	// Define the style_formats array
+	$style_formats = array(  
+		// Each array child is a format with it's own settings
+		array( 
+			'title' => 'Headers', 
+			'items' => array(
+				array(
+					'title' => 'h1', 
+					'block' => 'h1',
+				),
+				array(
+					'title' => 'h2', 
+					'block' => 'h2',
+				),
+				array(
+					'title' => 'h3', 
+					'block' => 'h3',
+				),
+				array(
+					'title' => 'h4', 
+					'block' => 'h4',
+				),
+				array(
+					'title' => 'h5', 
+					'block' => 'h5',
+				),
+				array(
+					'title' => 'h6', 
+					'block' => 'h6',
+				),
+			),
+		),
+		array(
+			'title' => 'Blocks', 
+			'items' => array(
+				array(
+					'title' => 'p', 
+					'block' => 'p' 
+				),
+				array(
+					'title' => 'pre', 
+					'block' => 'pre' 
+				)
+			)
+		),
+
+		array(
+			'title' => 'Containers', 
+			'items' => array(
+				array(
+					'title' => 'section', 
+					'block' => 'section',
+					'wrapper' => true,
+					'merge_siblings' => false
+				),
+				array(
+					'title' => 'article', 
+					'block' => 'article',
+					'wrapper' => true,
+					'merge_siblings' => false
+				),
+				array(
+					'title' => 'div', 
+					'block' => 'div',
+					'wrapper' => true,
+					'merge_siblings' => false
+				),
+			)
+		)
+	);  
+	// Insert the array, JSON ENCODED, into 'style_formats'
+	$init_array['style_formats'] = json_encode( $style_formats );  
+	
+	return $init_array;  
+  
+} 
+// Attach callback to 'tiny_mce_before_init' 
+add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' );  
+
+add_action( 'admin_init', 'my_theme_add_editor_styles' );
+
+function my_theme_add_editor_styles() {
+	$pboxes_editor_css = array(
+		plugins_url('plugins/', __FILE__) . 'tinymce/css/pboxes.css',
+		plugins_url('Premise-WP/', 'premise.php' ) . 'css/Premise-WP.min.css',
+	);
+	add_editor_style( $pboxes_editor_css );
+}
 
 ?>

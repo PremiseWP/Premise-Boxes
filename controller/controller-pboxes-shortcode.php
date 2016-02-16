@@ -65,7 +65,8 @@ class PBoxes_Shortcode {
 		add_filter("mce_external_plugins", array( $this, "register_tinymce_plugin" ) );
 
 		// Add a callback to add our button to the TinyMCE toolbar
-		add_filter('mce_buttons', array( $this, 'btn_init' ) );
+		add_filter('mce_buttons', array( $this, 'btn_init' ), 'content' );
+		
 	}
 
 
@@ -97,7 +98,25 @@ class PBoxes_Shortcode {
 	 * @return array          array of butttons with ours in there
 	 */
 	public function btn_init($buttons) {
-	    $buttons[] = "pboxes_add_box_button";
+	    // $buttons[] = "pboxes_add_box_button";
+	    $buttons[] = "visualblocks";
+		array_unshift( $buttons, 'styleselect' );
+		return $buttons;
+	}
+
+
+
+
+	/**
+	 * Register Shortcode Button
+	 *
+	 * Adds the button id to the $button array
+	 * 
+	 * @param  array $buttons array of buttons
+	 * @return array          array of butttons with ours in there
+	 */
+	public static function pboxes_btns($buttons) {
+	    $buttons[] = "visualblocks";
 	    return $buttons;
 	}
 
