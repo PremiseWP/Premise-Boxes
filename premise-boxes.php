@@ -1,9 +1,9 @@
-<?php 
+<?php
 /**
  * Plugin Name: Premise Boxes
  * Description: Create block, grids, full-width blocks, anything you want with Premise Boxes.
  * Plugin URI:	https://github.com/vallgroup/Premise-Boxes
- * Version:     1.0
+ * Version:     1.0.0
  * Author:      Vallgroup LLC
  * Author URI:  http://vallgroup.com
  * License:     GPL
@@ -44,7 +44,7 @@ add_action( 'plugins_loaded', array( Premise_Boxes::get_instance(), 'pboxes_setu
  * The Premise Boxes Main Class
  */
 class Premise_Boxes {
-	
+
 
 	/**
 	 * Plugin instance.
@@ -55,11 +55,11 @@ class Premise_Boxes {
 	protected static $instance = NULL;
 
 
-	
+
 
 	/**
 	 * plugin url
-	 * 
+	 *
 	 * @var string
 	 */
 	public $plugin_url = PBOXES_URL;
@@ -69,12 +69,12 @@ class Premise_Boxes {
 
 	/**
 	 * plugin path
-	 * 
+	 *
 	 * @var strin
 	 */
 	public $plugin_path = PBOXES_PATH;
-	
-	
+
+
 
 
 
@@ -86,7 +86,7 @@ class Premise_Boxes {
 	 */
 	public function __construct() {}
 
-	
+
 
 
 
@@ -98,7 +98,7 @@ class Premise_Boxes {
 	 */
 	public static function get_instance() {
 		NULL === self::$instance and self::$instance = new self;
-		
+
 		return self::$instance;
 	}
 
@@ -136,15 +136,15 @@ class Premise_Boxes {
 		include PBOXES_PATH . 'library/pboxes-library.php';
 	}
 
-	
 
 
-	
+
+
 	/**
 	 * Premise Boxes Hooks
 	 */
 	public function pboxes_hooks() {
-		
+
 		// Enqueue scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'pboxes_scripts' ) );
 
@@ -176,7 +176,7 @@ class Premise_Boxes {
 	public function pboxes_scripts( $hook ) {
 		//register styles
 		wp_register_style( 'pboxes_style_css'   , PBOXES_URL . 'css/Premise-Boxes.min.css' );
-		
+
 		//register scripts
 		wp_register_script( 'pboxes_script_js'  , PBOXES_URL . 'js/Premise-Boxes.min.js', array( 'jquery' ) );
 
@@ -193,7 +193,7 @@ class Premise_Boxes {
 
 	/**
 	 * Insert Pboxes editor
-	 * 
+	 *
 	 * @return string html for editor dialog
 	 */
 	public function insert_editor() {
@@ -235,85 +235,85 @@ class Premise_Boxes {
 
 
 
-function my_mce_before_init_insert_formats( $init_array ) {  
+function my_mce_before_init_insert_formats( $init_array ) {
 	// Define the style_formats array
-	$style_formats = array(  
+	$style_formats = array(
 		// Each array child is a format with it's own settings
-		array( 
-			'title' => 'Headers', 
+		array(
+			'title' => 'Headers',
 			'items' => array(
 				array(
-					'title' => 'h1', 
+					'title' => 'h1',
 					'block' => 'h1',
 				),
 				array(
-					'title' => 'h2', 
+					'title' => 'h2',
 					'block' => 'h2',
 				),
 				array(
-					'title' => 'h3', 
+					'title' => 'h3',
 					'block' => 'h3',
 				),
 				array(
-					'title' => 'h4', 
+					'title' => 'h4',
 					'block' => 'h4',
 				),
 				array(
-					'title' => 'h5', 
+					'title' => 'h5',
 					'block' => 'h5',
 				),
 				array(
-					'title' => 'h6', 
+					'title' => 'h6',
 					'block' => 'h6',
 				),
 			),
 		),
 		array(
-			'title' => 'Blocks', 
+			'title' => 'Blocks',
 			'items' => array(
 				array(
-					'title' => 'p', 
-					'block' => 'p' 
+					'title' => 'p',
+					'block' => 'p'
 				),
 				array(
-					'title' => 'pre', 
-					'block' => 'pre' 
+					'title' => 'pre',
+					'block' => 'pre'
 				)
 			)
 		),
 
 		array(
-			'title' => 'Containers', 
+			'title' => 'Containers',
 			'items' => array(
 				array(
-					'title' => 'section', 
+					'title' => 'section',
 					'block' => 'section',
 					'wrapper' => true,
 					'merge_siblings' => false
 				),
 				array(
-					'title' => 'article', 
+					'title' => 'article',
 					'block' => 'article',
 					'wrapper' => true,
 					'merge_siblings' => false
 				),
 				array(
-					'title' => 'div', 
+					'title' => 'div',
 					'block' => 'div',
 					'wrapper' => true,
 					'merge_siblings' => false
 				),
 			)
 		)
-	);  
+	);
 	// Insert the array, JSON ENCODED, into 'style_formats'
-	$init_array['style_formats'] = json_encode( $style_formats );  
-	
-	return $init_array;  
-  
-} 
-// Attach callback to 'tiny_mce_before_init' 
-add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' );  
+	$init_array['style_formats'] = json_encode( $style_formats );
+
+	return $init_array;
+
+}
+// Attach callback to 'tiny_mce_before_init'
+add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' );
 
 add_action( 'admin_init', 'my_theme_add_editor_styles' );
 
