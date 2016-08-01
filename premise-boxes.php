@@ -128,6 +128,10 @@ class Premise_Boxes {
 	 * @since 1.0
 	 */
 	protected function do_includes() {
+
+		// Load tinymce plugin class
+		include PBOXES_PATH . 'controller/controller-pboxes-tinymce-plugin.php';
+
 		// controller files
 		include PBOXES_PATH . 'controller/controller-pboxes-ui.php';
 		include PBOXES_PATH . 'controller/controller-pboxes-shortcode.php';
@@ -152,17 +156,20 @@ class Premise_Boxes {
 		add_action( 'admin_enqueue_scripts', array( $this, 'pboxes_scripts' ) );
 
 		// Add Meta Boxes for custom UI
-		add_action( 'add_meta_boxes', array( PBoxes_UI::get_instance(), 'init_ui' ) );
+		// add_action( 'add_meta_boxes', array( PBoxes_UI::get_instance(), 'init_ui' ) );
 
 		// Add Shortcode button
 		add_action( 'init', array( PBoxes_Shortcode::get_instance(), 'init_shortcodes' ) );
 
 		// Insert editor for boxes
-		add_action( 'admin_footer', array( $this, 'insert_editor' ) );
+		// add_action( 'admin_footer', array( $this, 'insert_editor' ) );
 
-		add_action( 'print_media_templates', array( $this, 'media_templates' ) );
+		// add_action( 'print_media_templates', array( $this, 'media_templates' ) );
 
-		add_filter('mce_external_plugins', array( $this, 'my_custom_plugins' ) );
+		// add_filter('mce_external_plugins', array( $this, 'my_custom_plugins' ) );
+
+		// Insert Tinymce plugin
+		add_action( 'admin_init', array( PBoxes_Tinymce_Plugin::get_instance(), 'init' ), 20 );
 	}
 
 

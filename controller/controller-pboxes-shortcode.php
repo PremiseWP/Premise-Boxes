@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Premise Boxes Shortcode
  *
@@ -13,7 +13,7 @@
 */
 class PBoxes_Shortcode {
 
-	
+
 	/**
 	 * Plugin instance.
 	 *
@@ -21,7 +21,7 @@ class PBoxes_Shortcode {
 	 * @type object
 	 */
 	protected static $instance = NULL;
-	
+
 
 
 
@@ -34,21 +34,21 @@ class PBoxes_Shortcode {
 	 */
 	public static function get_instance() {
 		NULL === self::$instance and self::$instance = new self;
-		
+
 		return self::$instance;
 	}
 
 
 
-	
+
 	/**
 	 * Construct
 	 *
-	 * Here we check if the user has enough permissions to use shortcodes in the first place 
+	 * Here we check if the user has enough permissions to use shortcodes in the first place
 	 * If they do, we register the necessary hooks for the shortcodes to work.
 	 */
 	function __construct() {
-		
+
 
 	}
 
@@ -61,23 +61,23 @@ class PBoxes_Shortcode {
 		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') && get_user_option('rich_editing') == 'true')
 		   return;
 
-		// Add a callback to regiser our tinymce plugin   
-		add_filter("mce_external_plugins", array( $this, "register_tinymce_plugin" ) );
+		// Add a callback to regiser our tinymce plugin
+		// add_filter("mce_external_plugins", array( $this, "register_tinymce_plugin" ) );
 
 		// Add a callback to add our button to the TinyMCE toolbar
-		add_filter('mce_buttons', array( $this, 'btn_init' ), 'content' );
-		
+		// add_filter('mce_buttons', array( $this, 'btn_init' ), 'content' );
+
 	}
 
 
-	
 
-	
+
+
 	/**
 	 * Register TinyMCE Plugin
 	 *
 	 * Adds the shortcode JS file to TinyMCE.
-	 * 
+	 *
 	 * @param  array $plugin_array array of plugins
 	 * @return array               array of plugins with ours in it
 	 */
@@ -86,14 +86,14 @@ class PBoxes_Shortcode {
 	    return $plugin_array;
 	}
 
-	
+
 
 
 	/**
 	 * Register Shortcode Button
 	 *
 	 * Adds the button id to the $button array
-	 * 
+	 *
 	 * @param  array $buttons array of buttons
 	 * @return array          array of butttons with ours in there
 	 */
@@ -111,7 +111,7 @@ class PBoxes_Shortcode {
 	 * Register Shortcode Button
 	 *
 	 * Adds the button id to the $button array
-	 * 
+	 *
 	 * @param  array $buttons array of buttons
 	 * @return array          array of butttons with ours in there
 	 */
@@ -123,7 +123,7 @@ class PBoxes_Shortcode {
 
 
 
-	
+
 }
 
 
