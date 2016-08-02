@@ -67,7 +67,7 @@ class PBoxes_Tinymce_Plugin {
 	 * @return array          new array includeing our button
 	 */
 	public function mce_button($buttons){
-        array_push($buttons, 'dtbaker_mce_banner_button');
+        array_push($buttons, 'pboxes_mce_box_button');
 		return $buttons;
 	}
 
