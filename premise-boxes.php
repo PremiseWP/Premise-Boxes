@@ -167,7 +167,6 @@ class Premise_Boxes {
 			add_action( 'admin_init', 'my_theme_add_editor_styles' );
 			function my_theme_add_editor_styles() {
 				$pboxes_editor_css = array(
-					plugins_url('plugins/', __FILE__) . 'tinymce/css/pboxes.css',
 					plugins_url('Premise-WP/', 'premise.php' ) . 'css/Premise-WP.min.css',
 				);
 				add_editor_style( $pboxes_editor_css );

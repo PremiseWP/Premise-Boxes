@@ -55,7 +55,7 @@ class PBoxes_Tinymce_Plugin {
 	 * @return array                new array of plugins to load including ours
 	 */
 	public function mce_plugin($plugin_array){
-		$plugin_array['dtbaker_mce_banner'] = plugins_url( '/Premise-Boxes/js/admin/controller-tinymce-plugin.js' );
+		$plugin_array['pboxes_mce_box'] = plugins_url( '/Premise-Boxes/js/admin/controller-tinymce-plugin.js' );
 		return $plugin_array;
 	}
 
@@ -97,26 +97,5 @@ class PBoxes_Tinymce_Plugin {
 
 		wp_enqueue_script( 'boutique-banner-editor-view', plugins_url( '/Premise-Boxes/js/admin/model-tinymce-plugin.js' ), array( 'shortcode', 'wp-util', 'jquery' ), false, true );
     }
-
-
-	// front end shortcode displaying:
-	// public function dtbaker_shortcode_banner($atts=array(), $innercontent='', $code='') {
-	//     $sc_atts = shortcode_atts(
- //    		array(
- //        		'id' => false,
- //        		'title' => 'Special:',
- //        		'link' => '',
- //        		'linkhref' => '',
- //    		),
- //    		$atts
-	//     );
-	//     $sc_atts['banner_id'] = strtolower(preg_replace('#\W+#','', $sc_atts['title'])); // lets put everything in the view-data object
-	//     $sc_atts = (object) $sc_atts;
-
-	// 	// Use Output Buffering feature to have PHP use it's own enging for templating
-	//     ob_start();
-	//     include PBOXES_PATH . '/views/dtbaker_shortcode_banner_view.php';
-	//     return ob_get_clean();
-	// }
 }
 ?>

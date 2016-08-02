@@ -1,5 +1,5 @@
 ( function() {
-	tinymce.PluginManager.add( 'dtbaker_mce_banner', function( editor ) {
+	tinymce.PluginManager.add( 'pboxes_mce_box', function( editor ) {
 		editor.addButton( 'pboxes_mce_box_button', {
 			text: 'Box',
 			icon: false,
