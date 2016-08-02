@@ -1,9 +1,11 @@
 <?php
 /**
  * Plugin Name: Premise Boxes
- * Description: Create block, grids, full-width blocks, anything you want with Premise Boxes.
+ * Description: A box allows you to wrap content from the WYSIWYG editor within a 'div' and place into your site content. You can add your own classes and id which enables you to build markup quickly.
+				If you use a framework like Premise WP or Bootstrap, you can apply classes from said framework and easily structure your content in the front end.
+				Support to insert Boxes within Boxes will be coming soon as well the ability to add more than 'div' elements.
  * Plugin URI:	https://github.com/vallgroup/Premise-Boxes
- * Version:     1.0.0
+ * Version:     2.0.0
  * Author:      Vallgroup LLC
  * Author URI:  http://vallgroup.com
  * License:     GPL
@@ -133,7 +135,6 @@ class Premise_Boxes {
 		include PBOXES_PATH . 'controller/controller-pboxes-tinymce-plugin.php';
 
 		// controller files
-		include PBOXES_PATH . 'controller/controller-pboxes-ui.php';
 		include PBOXES_PATH . 'controller/controller-pboxes-shortcode.php';
 
 		// library files
@@ -149,27 +150,29 @@ class Premise_Boxes {
 	 */
 	public function pboxes_hooks() {
 
-		// Enqueue scripts
-		add_action( 'wp_enqueue_scripts', array( $this, 'pboxes_scripts' ) );
-
 		// Enqueue admin scripts
 		add_action( 'admin_enqueue_scripts', array( $this, 'pboxes_scripts' ) );
 
-		// Add Meta Boxes for custom UI
-		// add_action( 'add_meta_boxes', array( PBoxes_UI::get_instance(), 'init_ui' ) );
-
 		// Add Shortcode button
-		add_action( 'init', array( PBoxes_Shortcode::get_instance(), 'init_shortcodes' ) );
+		add_shortcode( 'pwp_boxes', array( PBoxes_Shortcode::get_instance(), 'init_shortcode' ) );
 
 		// Insert editor for boxes
-		// add_action( 'admin_footer', array( $this, 'insert_editor' ) );
-
-		// add_action( 'print_media_templates', array( $this, 'media_templates' ) );
-
-		// add_filter('mce_external_plugins', array( $this, 'my_custom_plugins' ) );
+		add_action( 'admin_footer', array( $this, 'insert_editor' ) );
 
 		// Insert Tinymce plugin
 		add_action( 'admin_init', array( PBoxes_Tinymce_Plugin::get_instance(), 'init' ), 20 );
+
+		// if Premise WP has been loaded
+		if ( class_exists( 'Premise_WP' ) ) {
+			add_action( 'admin_init', 'my_theme_add_editor_styles' );
+			function my_theme_add_editor_styles() {
+				$pboxes_editor_css = array(
+					plugins_url('plugins/', __FILE__) . 'tinymce/css/pboxes.css',
+					plugins_url('Premise-WP/', 'premise.php' ) . 'css/Premise-WP.min.css',
+				);
+				add_editor_style( $pboxes_editor_css );
+			}
+		}
 	}
 
 
@@ -204,132 +207,8 @@ class Premise_Boxes {
 	 * @return string html for editor dialog
 	 */
 	public function insert_editor() {
-		add_filter('mce_buttons', array( $this, 'pboxes_add_vb_btn' ), 'pboxes_box_content' );
-		// pboxes_new_box_dialog();
+		pboxes_new_box_dialog();
 	}
-
-
-
-
-	public function pboxes_add_vb_btn($buttons) {
-		$buttons[] = "visualblocks";
-		array_unshift( $buttons, 'styleselect' );
-		return $buttons;
-	}
-
-
-
-	public function my_custom_plugins () {
-	     $plugins = array('visualblocks'); //Add any more plugins you want to load here
-	     $plugins_array = array();
-
-	     //Build the response - the key is the plugin name, value is the URL to the plugin JS
-	     foreach ($plugins as $plugin ) {
-	     	$plugins_array[ $plugin ] = plugins_url('plugins/', __FILE__) . 'tinymce/' . $plugin . '/plugin.js';
-	     }
-	     return $plugins_array;
-	}
-
-
-
-
-	public function media_templates() {
-        if ( ! isset( get_current_screen()->id ) || get_current_screen()->base != 'post' )
-            return;
-	    include_once __DIR__ . '/templates/tmpl-pboxes.html';
-	}
-}
-
-
-
-function my_mce_before_init_insert_formats( $init_array ) {
-	// Define the style_formats array
-	$style_formats = array(
-		// Each array child is a format with it's own settings
-		array(
-			'title' => 'Headers',
-			'items' => array(
-				array(
-					'title' => 'h1',
-					'block' => 'h1',
-				),
-				array(
-					'title' => 'h2',
-					'block' => 'h2',
-				),
-				array(
-					'title' => 'h3',
-					'block' => 'h3',
-				),
-				array(
-					'title' => 'h4',
-					'block' => 'h4',
-				),
-				array(
-					'title' => 'h5',
-					'block' => 'h5',
-				),
-				array(
-					'title' => 'h6',
-					'block' => 'h6',
-				),
-			),
-		),
-		array(
-			'title' => 'Blocks',
-			'items' => array(
-				array(
-					'title' => 'p',
-					'block' => 'p'
-				),
-				array(
-					'title' => 'pre',
-					'block' => 'pre'
-				)
-			)
-		),
-
-		array(
-			'title' => 'Containers',
-			'items' => array(
-				array(
-					'title' => 'section',
-					'block' => 'section',
-					'wrapper' => true,
-					'merge_siblings' => false
-				),
-				array(
-					'title' => 'article',
-					'block' => 'article',
-					'wrapper' => true,
-					'merge_siblings' => false
-				),
-				array(
-					'title' => 'div',
-					'block' => 'div',
-					'wrapper' => true,
-					'merge_siblings' => false
-				),
-			)
-		)
-	);
-	// Insert the array, JSON ENCODED, into 'style_formats'
-	$init_array['style_formats'] = json_encode( $style_formats );
-
-	return $init_array;
-
-}
-// Attach callback to 'tiny_mce_before_init'
-add_filter( 'tiny_mce_before_init', 'my_mce_before_init_insert_formats' );
-
-add_action( 'admin_init', 'my_theme_add_editor_styles' );
-
-function my_theme_add_editor_styles() {
-	$pboxes_editor_css = array(
-		plugins_url('plugins/', __FILE__) . 'tinymce/css/pboxes.css',
-		plugins_url('Premise-WP/', 'premise.php' ) . 'css/Premise-WP.min.css',
-	);
-	add_editor_style( $pboxes_editor_css );
 }
 
 ?>
