@@ -24,8 +24,6 @@ class PBoxes_Shortcode {
 
 
 
-
-
 	/**
 	 * Access this plugin’s working instance
 	 *
@@ -40,93 +38,36 @@ class PBoxes_Shortcode {
 
 
 
-
 	/**
-	 * Construct
-	 *
-	 * Here we check if the user has enough permissions to use shortcodes in the first place
-	 * If they do, we register the necessary hooks for the shortcodes to work.
+	 * Leave blank and public on purpose
 	 */
-	function __construct() {
-
-
-	}
-
-
-
-
-
-	public function init_shortcodes() {
-		// Abort early if the user will never see TinyMCE
-		if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') && get_user_option('rich_editing') == 'true')
-		   return;
-
-		// Add a callback to regiser our tinymce plugin
-		// add_filter("mce_external_plugins", array( $this, "register_tinymce_plugin" ) );
-
-		// Add a callback to add our button to the TinyMCE toolbar
-		// add_filter('mce_buttons', array( $this, 'btn_init' ), 'content' );
-
-	}
-
-
-
+	function __construct() {}
 
 
 	/**
-	 * Register TinyMCE Plugin
+	 * initiate our shortcode
 	 *
-	 * Adds the shortcode JS file to TinyMCE.
-	 *
-	 * @param  array $plugin_array array of plugins
-	 * @return array               array of plugins with ours in it
+	 * @param  array  $attrs   attributes added by the user
+	 * @param  string $content the shortcode content
+	 * @return string          shortcode html to be placed in the site
 	 */
-	public function register_tinymce_plugin($plugin_array) {
-	    $plugin_array['pboxes_add_box_button'] = PBOXES_URL . 'shortcodes/js/boxes-sc.js';
-	    return $plugin_array;
+	public function init_shortcode( $attrs, $content = '' ) {
+
+		$a = shortcode_atts( array(
+			'pbox_class' => '',
+			'pbox_id' => '',
+		), $attrs, 'pwp_boxes' );
+
+		ob_start();
+		?>
+		<div class="pboxes-box <?php echo esc_attr( $a['pbox_class'] ); ?>" id="<?php echo esc_attr( $a['pbox_id'] ); ?>">
+			<?php echo ( '' !== $content ) ? $content : ''; ?>
+		</div>
+		<?php
+
+		$html = ob_get_clean();
+
+		return $html;
 	}
-
-
-
-
-	/**
-	 * Register Shortcode Button
-	 *
-	 * Adds the button id to the $button array
-	 *
-	 * @param  array $buttons array of buttons
-	 * @return array          array of butttons with ours in there
-	 */
-	public function btn_init($buttons) {
-	    // $buttons[] = "pboxes_add_box_button";
-	    $buttons[] = "visualblocks";
-		array_unshift( $buttons, 'styleselect' );
-		return $buttons;
-	}
-
-
-
-
-	/**
-	 * Register Shortcode Button
-	 *
-	 * Adds the button id to the $button array
-	 *
-	 * @param  array $buttons array of buttons
-	 * @return array          array of butttons with ours in there
-	 */
-	public static function pboxes_btns($buttons) {
-	    $buttons[] = "visualblocks";
-	    return $buttons;
-	}
-
-
-
-
-
 }
-
-
-
-
 ?>

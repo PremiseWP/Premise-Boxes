@@ -6,7 +6,7 @@
 		template: media.template( 'editor-pwp-boxes' ),
 		getContent: function() {
 			var options = this.shortcode.attrs.named;
-			options.innercontent = this.shortcode.content;
+			options.pbox_innercontent = this.shortcode.content;
 			return this.template(options);
 		},
 		View: { // before WP 4.2:
@@ -18,20 +18,26 @@
 			},
 			getHtml: function() {
 				var options = this.shortcode.attrs.named;
-				options.innercontent = this.shortcode.content;
+				options.pbox_innercontent = this.shortcode.content;
 				return this.template(options);
 			}
 		},
 		edit: function( data ) {
 			var shortcode_data = wp.shortcode.next(shortcode_string, data);
 			var values = shortcode_data.shortcode.attrs.named;
-			values.innercontent = shortcode_data.shortcode.content;
+			values.pbox_innercontent = shortcode_data.shortcode.content;
 			wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, values);
 		},
 		// this is called from our tinymce plugin, also can call from our "edit" function above
 		// wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, "bird");
 		popupwindow: function(editor, values, onsubmit_callback) {
 			values = values || [];
+			var /*passed_arguments = top.tinymce.activeEditor.windowManager.getParams(),
+			values               = passed_arguments.values,
+			callback             = passed_arguments.callback,
+			editor               = passed_arguments.editor,*/
+			theForm              = $( '#pboxes-dialog-form' );
+		    var dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 			if(typeof onsubmit_callback !== 'function'){
 				onsubmit_callback = function( e ) {
 					// get the form
@@ -41,16 +47,18 @@
 
 					// build attributes object
 					$.map( _data, pboxesBuildAttrs );
-
+console.log( attrs );
 					// Insert content when the window form is submitted (this also replaces during edit, handy!)
 					var args = {
 						tag     : shortcode_string,
-						type    : attrs.innercontent.length ? 'closed' : 'single',
-						content : attrs.innercontent,
+						type    : attrs.pbox_innercontent.length ? 'closed' : 'single',
+						content : attrs.pbox_innercontent,
 						attrs   : attrs,
 					};
-
 					editor.insertContent( wp.shortcode.string( args ) );
+
+					theForm[0].reset();
+					dialog_editor.setContent( '' );
 
 					// build our attributes object. exclude the inner content
 					function pboxesBuildAttrs( $n ) {
@@ -58,22 +66,31 @@
 					};
 				};
 			};
-			editor.windowManager.open(
-				// load the dialog window
-				{
-					title: 'Premise Box',
-					width: 600,
-					height: 500,
-					url: '/wp-content/plugins/Premise-Boxes/view/view-tinymce-popup.php',
-				},
-				// Pass the arguments that we need available in our dialog
-				{
-					editor: editor,
-					wp: wp,
-					callback: onsubmit_callback,
-					values: values,
-				}
-			);
+
+			// If we have values, enter them into our form
+		    if ( values ) {
+		    	var input = theForm.find( 'input[name^="pbox_"]' );
+		    	input.each( function() {
+		    		$( this ).val( values[$( this ).attr( 'name' )] );
+		    	} );
+		    	dialog_editor.setContent( values.pbox_innercontent );
+		    };
+
+		    // bind our actions for when the form is submitted
+			theForm.off().submit( function( e ) {
+				e.preventDefault();
+			    $( '#pboxes_dialog' ).fadeOut( 'fast' );
+			    onsubmit_callback( e );
+		    	return false;
+			} );
+
+			$( '.pboxes-dialog-close' ).off().click(function() {
+				$( '#pboxes_dialog' ).fadeOut( 'fast' );
+				theForm[0].reset();
+				dialog_editor.setContent( '' );
+			})
+
+			$( '#pboxes_dialog' ).fadeIn( 'fast' );
 		}
 	};
 	wp.mce.views.register( shortcode_string, wp.mce.pwp_boxes );

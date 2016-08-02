@@ -1,7 +1,7 @@
 {
 	"name": "Premise-Boxes",
-	"version": "1.0.0",
-	"description": "Create block, grids, full-width blocks, anything you want with Premise Boxes.",
+	"version": "2.0.0",
+	"description": "A box allows you to wrap content from the WYSIWYG editor within a 'div' and place into your site content.",
 	"author": "Mario Vallejo",
 	"devDependencies": {
 		"grunt": "^0.4.5",

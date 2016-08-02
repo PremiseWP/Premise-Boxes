@@ -1,18 +1,18 @@
-<?php 
+<?php
 /**
  * Premise Boxes Library
  *
  * @package Premise Boxes
  * @subpackage Library
  *
- * @since 1.0 
+ * @since 1.0
  */
 
 
 
 /**
  * Premise Box Admin Dialog
- * 
+ *
  * @param  string $content content to be passed to the editor. default ''
  * @param  string $id      id to use as the textarea id and name.
  * @return string          html for box dialog and editor
@@ -20,88 +20,55 @@
 function pboxes_new_box_dialog() {
 	?>
 	<div id="pboxes_dialog" style="display:none;">
-		<div class="pboxes_shortcode_dialog">
-			<div class="pboxes_shortcode_dialog_header premise-clear-float">
-				<a href="javascript:void(0);" id="pboxes_insert_shortcode_btn">
-					<i class="fa fa-check"></i>
-				</a>
-				<a href="javascript:void(0);" onclick="wp.mce.pboxes.closeDialog()" id="pboxes_close_dialog">
-					<i class="fa fa-times"></i>
-				</a>
-				<h3>Insert A Box</h3>
+		<div class="pboxes-dialog-header">
+			<div class="pboxes-dialog-controls premise-clear-float">
+				<div class="pboxes-dialog-control pboxes-dialog-close  premise-float-right"><i class="fa fa-close"></i></div>
+				<div class="pboxes-dialog-control pboxes-dialog-tooltip premise-float-right">
+					<i class="fa fa-question"></i>
+					<span>
+						<p>A box allows you to wrap content from the WYSIWYG editor and place into your site content. You can  add your own classes and id which enables you to build markup quickly.</p>
+						<p>If you use a framework like <a href="http://premisewp.com" target="_blank">Premise WP</a> or Bootstrap, you can apply classes from said framework here and easily structure your content in the front end.</p>
+						<p>Support to insert Boxes within Boxes will be coming soon as well the ability to add more than 'div' elements.</p>
+					</span>
+				</div>
 			</div>
-			<div class="pboxes_shortcode_dialog_inner">
-				
-				<form id="pboxes_box_form">
-					
-					<div id="pboxes_box_atts">
-						
-						<div class="pboxes_box_wp_editor">
-							<?php 
-							
-							wp_editor( 
-								'', 
-								'pboxes_box_content', 
-								array( 
-									'teeny' => false,
-								)
-							); ?>
-						</div>
-
-						<?php 
-
-						// To support multiple elements in the future
-						// currently only div is supported
-						// $elements = array(
-						// 	'div' => 'div', 
-						// 	'span' => 'span', 
-						// 	'section' => 'section', 
-						// 	'article' => 'article', 
-						// );
-
-						// premise_field( 'select', 
-						// 	array( 
-						// 		'name' => 'pboxes_type', 
-						// 		'options' => $elements, 
-						// 	) 
-						// );
-
-						$options = array(
-							array( 
-								'type' => 'text', 
-								'name' => 'pboxes_id', 
-								'placeholder' => 'id', 
-								'label' => 'id Attribute', 
-							), 
-							array( 
-								'type' => 'text', 
-								'name' => 'pboxes_class', 
-								'placeholder' => 'class', 
-								'label' => 'class  Attribute', 
-							), 
-							array( 
-								'type' => 'text', 
-								'name' => 'pboxes_style', 
-								'placeholder' => 'style', 
-								'label' => 'style  Attribute', 
-							), 
-							array( 
-								'type' => 'text', 
-								'name' => 'pboxes_attributes', 
-								'placeholder' => 'data-msg="You clicked Me!" onclick="alert(this.data-msg);"', 
-								'label' => 'Additional  Attributes', 
-							),
-						);
-
-						premise_field_section( $options );
-						?>
-					</div>
-					
-				</form>
-			</div>
+		<h2>Premise Box</h2>
 		</div>
+		<form id="pboxes-dialog-form" action="" method="post">
+
+			<div class="premise-row">
+				<?php
+				// insert a class
+				premise_field( '', array(
+					'label'         => 'Insert a class',
+					'name'          => 'pbox_class',
+					'wrapper_class' => 'span6',
+				) );
+				// insert an id
+				premise_field( '', array(
+					'label'         => 'Insert an id',
+					'name'          => 'pbox_id',
+					'wrapper_class' => 'span6',
+				) );
+				// insert content
+				// premise_field( 'textarea', array(
+				// 	'label'         => 'Content',
+				// 	'name'          => 'innercontent',
+				// 	'wrapper_class' => 'span12',
+				// ) );
+
+				?>
+				<div class="span12">
+					<h3>Your Box Content</h3>
+					<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent' ) ); ?>
+				</div>
+			</div>
+
+			<?php premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
+
+		</form>
 	</div>
-	<?php 
+	<?php
 }
 
 
