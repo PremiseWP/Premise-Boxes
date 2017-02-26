@@ -137,15 +137,32 @@ class Premise_Boxes {
 	 */
 	public function pboxes_scripts( $hook ) {
 		//register styles
-		wp_register_style( 'pboxes_style_css'   , PBOXES_URL . 'css/Premise-Boxes.min.css' );
+		wp_register_style(
+			'pboxes_codemirror_monokai_theme_css'   ,
+			PBOXES_URL . 'includes/CodeMirror/theme/monokai.css'
+		);
+		wp_register_style(
+			'pboxes_style_css'   ,
+			PBOXES_URL . 'css/Premise-Boxes.min.css',
+			array( 'pboxes_codemirror_monokai_theme_css' )
+		);
 
 		//register scripts
-		wp_register_script( 'pboxes_script_js'  , PBOXES_URL . 'js/Premise-Boxes.min.js', array( 'jquery' ) );
+		wp_register_script(
+			'pboxes_codemirror_mode_js',
+			PBOXES_URL . 'includes/CodeMirror/mode/javascript/javascript.js'
+		);
+		wp_register_script(
+			'pboxes_script_js',
+			PBOXES_URL . 'js/Premise-Boxes.min.js',
+			array( 'jquery' )
+		);
 
 		// enqueue both
 		if ( ( 'post.php' == $hook || 'post-new.php' == $hook ) ) {
 			wp_enqueue_style( 'pboxes_style_css' );
 			wp_enqueue_script( 'pboxes_script_js' );
+			wp_enqueue_script( 'pboxes_codemirror_mode_js' );
 		}
 	}
 

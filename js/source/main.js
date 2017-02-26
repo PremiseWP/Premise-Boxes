@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 (function($){
 	var PremiseBoxes = {

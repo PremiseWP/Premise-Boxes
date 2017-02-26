@@ -22,11 +22,6 @@
 				return this.template(options);
 			}
 		},
-		// getHtml: function() {
-		// 	var options = this.shortcode.attrs.named;
-		// 	options.pbox_innercontent = this.shortcode.content;
-		// 	return this.template(options);
-		// },
 		edit: function( data ) {
 			var shortcode_data = wp.shortcode.next(shortcode_string, data);
 			var values = shortcode_data.shortcode.attrs.named;
@@ -60,11 +55,15 @@
 					editor.insertContent( wp.shortcode.string( args ) );
 
 					theForm[0].reset();
-					dialog_editor.setContent( '' );
+					if ( dialog_editor ) {
+						dialog_editor.setContent( '' );
+					}
 
 					// build our attributes object. exclude the inner content
 					function pboxesBuildAttrs( $n ) {
-						attrs[$n.name] = $n.value;
+						attrs[$n.name] = ( 'pbox_wrapper' !== $n.name )
+							? $n.value
+							: encodeURIComponent( $n.value );
 					};
 				};
 			};
@@ -73,8 +72,15 @@
 		    if ( Object.keys( values ).length ) {
 		    	var input = theForm.find( '[name^="pbox_"]' );
 		    	input.each( function() {
-		    		console.log( $( this ) );
-		    		$( this ).val( values[$( this ).attr( 'name' )] );
+		    		var $this = $( this ),
+		    		_val = values[ $this.attr( 'name' ) ];
+
+		    		$this.val( _val );
+
+		    		if ( $this.is( '#pbox_wrapper' ) ) {
+		    			pboxWrapper.setValue( decodeURIComponent( pboxWrapper.getTextArea().value ) );
+		    		}
+
 		    	} );
 		    	if ( dialog_editor ) {
 		    		dialog_editor.setContent( values.pbox_innercontent );
@@ -101,4 +107,5 @@
 		}
 	};
 	wp.mce.views.register( shortcode_string, wp.mce.pwp_boxes );
+	var pboxWrapper = CodeMirror.fromTextArea($('#pbox_wrapper')[0], {theme: 'monokai'});
 }(jQuery));

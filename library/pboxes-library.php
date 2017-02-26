@@ -51,16 +51,16 @@ function pboxes_new_box_dialog() {
 					'wrapper_class' => 'span6',
 				) );
 				// insert content
-				// premise_field( 'textarea', array(
-				// 	'label'         => 'Content',
-				// 	'name'          => 'innercontent',
-				// 	'wrapper_class' => 'span12',
-				// ) );
+				premise_field( 'textarea', array(
+					'label'         => 'HTML Wrapper',
+					'name'          => 'pbox_wrapper',
+					'wrapper_class' => 'span12',
+				) );
 
 				?>
 				<div class="span12">
 					<h3>Your Box Content</h3>
-					<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent' ) ); ?>
+					<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent', 'teeny' => true, 'editor_height' => 300 ) ); ?>
 				</div>
 			</div>
 
