@@ -14,4 +14,5 @@ CodeMirror is a in-browser code editor. We use it on the code editor for develop
 
 ## Changelog
 
-* **v1.0.0**
+**v1.0.0**
+* Release version 1.0.0
