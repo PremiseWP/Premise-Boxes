@@ -98,3 +98,26 @@ body.wp-admin #pboxes_dialog {
 	margin-top: 20px;
 }
 
+#pboxes-content-editor {
+	position: relative;
+	min-height: 550px; /* Editor is at least 300px */
+}
+
+#pboxes-content-editor .pboxes-code-editor,
+#pboxes-content-editor .pboxes-wysiwyg-editor {
+	position: absolute;
+	top: 30px;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	opacity: 0;
+	transition: opacity .2s ease;
+	z-index: 0;
+}
+
+#pboxes-content-editor .pboxes-code-editor.pboxes-show,
+#pboxes-content-editor .pboxes-wysiwyg-editor.pboxes-show {
+	opacity: 1;
+	z-index: 1;
+}

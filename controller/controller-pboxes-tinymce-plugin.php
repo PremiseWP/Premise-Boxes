@@ -32,18 +32,12 @@ class PBoxes_Tinymce_Plugin {
      * @return void registers plugin and enqueues styles and scipts.
      */
 	public function init(){
-		// comment this 'add_action' out to disable shortcode backend mce view feature
-
-		// add_action( 'admin_init', array( $this, 'init_plugin' ), 20 );
-
-        // add_shortcode( 'boutique_banner', array( $this, 'dtbaker_shortcode_banner' ) );
-
 		// Register the plugin if the user has permissions to edit posts
     	if ( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) {
-			add_action( 'print_media_templates'             , array( $this, 'print_media_templates' ) );
-			add_action( 'admin_head'                        , array( $this, 'admin_head' ) );
-			add_filter( "mce_external_plugins"              , array( $this, 'mce_plugin' ) );
-			add_filter( "mce_buttons"                       , array( $this, 'mce_button' ) );
+			add_action( 'print_media_templates', array( $this, 'print_media_templates' ) );
+			add_filter( "mce_external_plugins" , array( $this, 'mce_plugin' ) );
+			add_filter( "mce_buttons"          , array( $this, 'mce_button' ) );
+			add_action( 'admin_footer'         , array( $this, 'insert_editor' ) );
 		}
 	}
 
@@ -55,7 +49,7 @@ class PBoxes_Tinymce_Plugin {
 	 * @return array                new array of plugins to load including ours
 	 */
 	public function mce_plugin($plugin_array){
-		$plugin_array['pboxes_mce_box'] = plugins_url( '/Premise-Boxes/js/admin/controller-tinymce-plugin.js' );
+		$plugin_array['pboxes_mce_box'] = plugins_url( '/Premise-Boxes/js/pboxes-tinymce-plugin.js' );
 		return $plugin_array;
 	}
 
@@ -83,19 +77,72 @@ class PBoxes_Tinymce_Plugin {
         include_once PBOXES_PATH . '/view/view-tinymce-plugin-editor-template.html';
     }
 
-
     /**
-     * Load our tinymce plugin JS file so that when called by tinymce, it works
-     *
-     * @return void enqueues our file to the admin head of the editor page
-     */
-    public function admin_head() {
-		$current_screen = get_current_screen();
-		if ( ! isset( $current_screen->id ) || $current_screen->base !== 'post' ) {
-			return;
-		}
+	 * Insert Pboxes editor
+	 *
+	 * @return string html for editor dialog
+	 */
+	public function insert_editor( $hook ) {
+		?>
+		<div id="pboxes_dialog" style="display:none;">
+			<div class="pboxes-dialog-header">
+				<div class="pboxes-dialog-controls premise-clear-float">
+					<div class="pboxes-dialog-control pboxes-dialog-close  premise-float-right"><i class="fa fa-close"></i></div>
+					<div class="pboxes-dialog-control pboxes-dialog-tooltip premise-float-right">
+						<i class="fa fa-question"></i>
+						<span>
+							<p>A box allows you to wrap content from the WYSIWYG editor within a div element. Developer can add classes and ids to this element that do something fun in the fornt end. Project/content managers can worry about the content itself with out dealing with the code.</p>
+							<p>For even more control over the HTML the code editor lets developers insert html that wraps the content.</p>
+						</span>
+					</div>
+				</div>
+			<h2>Premise Box</h2>
+			</div>
+			<form id="pboxes-dialog-form" action="" method="post">
 
-		wp_enqueue_script( 'boutique-banner-editor-view', plugins_url( '/Premise-Boxes/js/admin/model-tinymce-plugin.js' ), array( 'shortcode', 'wp-util', 'jquery' ), false, true );
-    }
+					<?php
+					// insert a class
+					premise_field( '', array(
+						'label'         => 'Insert a class',
+						'name'          => 'pbox_class',
+						'wrapper_class' => 'span6',
+						'before_wrapper'  => '<div class="premise-row">',
+					) );
+					// insert an id
+					premise_field( '', array(
+						'label'         => 'Insert an id',
+						'name'          => 'pbox_id',
+						'wrapper_class' => 'span6',
+						'after_wrapper'  => '</div>',
+					) );
+					?>
+
+					<div id="pboxes-content-editor">
+						<div class="pwp-align-right">
+							<a href="javascript:void(0);" class="pboxes-toggle-editors pwp-inline-block">Toggle Editors</a>
+						</div>
+						<?php
+						// insert content
+						premise_field( 'textarea', array(
+							// 'label'         => 'HTML Wrapper',
+							'name'          => 'pbox_wrapper',
+							'wrapper_class' => 'span12',
+							'before_wrapper'  => '<div class="pboxes-code-editor">',
+							'after_wrapper'  => '</div>',
+							'before_field'  => '<h3>Code Editor</h3><p>Use this editor for additional control over your box. Enter wrapper html and use <code>%%CONTENT%%</code> to insert the content.</p>',
+						) ); ?>
+
+						<div class="pboxes-wysiwyg-editor span12 pboxes-show">
+							<h3>Your Box Content</h3>
+							<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent', 'teeny' => true, 'editor_height' => 300 ) ); ?>
+						</div>
+					</div>
+
+				<?php premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
+
+			</form>
+		</div>
+		<?php
+	}
 }
 ?>

@@ -56,12 +56,18 @@ class PBoxes_Shortcode {
 		$a = shortcode_atts( array(
 			'pbox_class' => '',
 			'pbox_id' => '',
+			'pbox_wrapper' => '',
 		), $attrs, 'pwp_boxes' );
 
 		ob_start();
 		?>
 		<div class="pboxes-box <?php echo esc_attr( $a['pbox_class'] ); ?>" id="<?php echo esc_attr( $a['pbox_id'] ); ?>">
-			<?php echo ( '' !== $content ) ? $content : ''; ?>
+			<?php if ( ! empty( $a['pbox_wrapper'] ) ) {
+				echo str_replace( '%%CONTENT%%', $content, urldecode( $a['pbox_wrapper'] ) );
+			}
+			else {
+				echo $content;
+			} ?>
 		</div>
 		<?php
 
