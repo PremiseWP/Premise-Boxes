@@ -22,6 +22,11 @@
 				return this.template(options);
 			}
 		},
+		// getHtml: function() {
+		// 	var options = this.shortcode.attrs.named;
+		// 	options.pbox_innercontent = this.shortcode.content;
+		// 	return this.template(options);
+		// },
 		edit: function( data ) {
 			var shortcode_data = wp.shortcode.next(shortcode_string, data);
 			var values = shortcode_data.shortcode.attrs.named;
@@ -63,14 +68,17 @@
 					};
 				};
 			};
-console.log( values );
+
 			// If we have values, enter them into our form
 		    if ( Object.keys( values ).length ) {
-		    	var input = theForm.find( 'input[name^="pbox_"]' );
+		    	var input = theForm.find( '[name^="pbox_"]' );
 		    	input.each( function() {
+		    		console.log( $( this ) );
 		    		$( this ).val( values[$( this ).attr( 'name' )] );
 		    	} );
-		    	dialog_editor.setContent( values.pbox_innercontent );
+		    	if ( dialog_editor ) {
+		    		dialog_editor.setContent( values.pbox_innercontent );
+		    	}
 		    };
 
 		    // bind our actions for when the form is submitted
@@ -84,7 +92,9 @@ console.log( values );
 			$( '.pboxes-dialog-close' ).off().click(function() {
 				$( '#pboxes_dialog' ).fadeOut( 'fast' );
 				theForm[0].reset();
-				dialog_editor.setContent( '' );
+				if ( dialog_editor ) {
+		    		dialog_editor.setContent( '' );
+		    	}
 			})
 
 			$( '#pboxes_dialog' ).fadeIn( 'fast' );

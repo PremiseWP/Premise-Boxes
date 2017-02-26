@@ -4,7 +4,15 @@
 </style>
 	<div class="pboxes-box {{ data.pbox_class }}" id="{{ data.pbox_id }}">
 		<# if ( data.pbox_innercontent ) { #>
-			<span class="pboxes-box-content">{{ data.pbox_innercontent }}</span>
+			<div id="pboxes-box-content"><p>{{data.pbox_innercontent}}</p></div>
 		<# } #>
+
+		<# (function($){
+			$(window).load(function(){
+
+				//console.log( $.html('#pboxes-box-content') );
+				//$('#pboxes-box-content').html( data.pbox_innercontent );
+			});
+		}(jQuery)); #>
 	</div>
 </script>

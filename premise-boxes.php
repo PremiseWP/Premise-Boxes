@@ -1,21 +1,16 @@
 <?php
 /**
  * Plugin Name: Premise Boxes
- * Description: A box allows you to wrap content from the WYSIWYG editor within a 'div' and place into your site content. You can add your own classes and id which enables you to build markup quickly.
-				If you use a framework like Premise WP or Bootstrap, you can apply classes from said framework and easily structure your content in the front end.
-				Support to insert Boxes within Boxes will be coming soon as well the ability to add more than 'div' elements.
- * Plugin URI:	https://github.com/vallgroup/Premise-Boxes
- * Version:     2.0.0
- * Author:      Vallgroup LLC
- * Author URI:  http://vallgroup.com
+ * Description: This plugin is an attempt at reducing the gap there is between developers and project/content managers. The idea is to provide a UI that is user friendly for the ones who do not code, yet offer a code editor for developers who sometimes feel it is easier to make changes writting code.
+ * Plugin URI:
+ * Version:     1.0.0
+ * Author:      @premisewp
+ * Author URI:  http://premisewp.com
  * License:     GPL
- * Text Domain: premise-boxes-text-domain
+ * Text Domain: pwp-boxes-text-domain
  *
  * @package Premise Boxes
  */
-
-
-
 
 /**
  * Define constants for plugin's url and path
@@ -23,30 +18,20 @@
 define( 'PBOXES_PATH', plugin_dir_path(__FILE__) );
 define( 'PBOXES_URL', plugin_dir_url(__FILE__) );
 
-
-
-
 /**
  * Check for required plugins
  */
 require PBOXES_PATH . 'plugins/premise-plugin-require.php';
-
-
-
 
 /**
  * Intantiate and setup Premise Boxes
  */
 add_action( 'plugins_loaded', array( Premise_Boxes::get_instance(), 'pboxes_setup' ) );
 
-
-
-
 /**
  * The Premise Boxes Main Class
  */
 class Premise_Boxes {
-
 
 	/**
 	 * Plugin instance.
@@ -56,18 +41,12 @@ class Premise_Boxes {
 	 */
 	protected static $instance = NULL;
 
-
-
-
 	/**
 	 * plugin url
 	 *
 	 * @var string
 	 */
 	public $plugin_url = PBOXES_URL;
-
-
-
 
 	/**
 	 * plugin path
@@ -76,10 +55,6 @@ class Premise_Boxes {
 	 */
 	public $plugin_path = PBOXES_PATH;
 
-
-
-
-
 	/**
 	 * Constructor. Intentionally left empty and public.
 	 *
@@ -87,10 +62,6 @@ class Premise_Boxes {
 	 * @since 	1.0
 	 */
 	public function __construct() {}
-
-
-
-
 
 	/**
 	 * Access this plugin’s working instance
@@ -104,10 +75,6 @@ class Premise_Boxes {
 		return self::$instance;
 	}
 
-
-
-
-
 	/**
 	 * Setup Premise Boxes
 	 *
@@ -118,11 +85,6 @@ class Premise_Boxes {
 
 		$this->pboxes_hooks();
 	}
-
-
-
-
-
 
 	/**
 	 * Includes
@@ -140,10 +102,6 @@ class Premise_Boxes {
 		// library files
 		include PBOXES_PATH . 'library/pboxes-library.php';
 	}
-
-
-
-
 
 	/**
 	 * Premise Boxes Hooks
@@ -174,11 +132,6 @@ class Premise_Boxes {
 		}
 	}
 
-
-
-
-
-
 	/**
 	 * Premise Boxes CSS & JS
 	 */
@@ -196,10 +149,6 @@ class Premise_Boxes {
 		}
 	}
 
-
-
-
-
 	/**
 	 * Insert Pboxes editor
 	 *
@@ -209,5 +158,4 @@ class Premise_Boxes {
 		pboxes_new_box_dialog();
 	}
 }
-
 ?>
