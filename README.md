@@ -14,5 +14,8 @@ CodeMirror is a in-browser code editor. We use it on the code editor for develop
 
 ## Changelog
 
+**v1.0.1**
+* Fixed plugin file not being found. Had upper case letters for the directory which changed when lauching the plugin. updated to lower casee, we are good now!
+
 **v1.0.0**
 * Release version 1.0.0
