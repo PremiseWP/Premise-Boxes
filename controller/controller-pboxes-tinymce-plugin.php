@@ -49,7 +49,7 @@ class PBoxes_Tinymce_Plugin {
 	 * @return array                new array of plugins to load including ours
 	 */
 	public function mce_plugin($plugin_array){
-		$plugin_array['pboxes_mce_box'] = plugins_url( '/Premise-Boxes/js/pboxes-tinymce-plugin.js' );
+		$plugin_array['pboxes_mce_box'] = plugins_url( '/premise-boxes/js/pboxes-tinymce-plugin.js' );
 		return $plugin_array;
 	}
 
