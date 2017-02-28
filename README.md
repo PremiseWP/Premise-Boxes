@@ -42,10 +42,12 @@ So Premise Boxes solves this problem by alliwng John to code in a separate edito
 	(function($){
 		$(document).ready(function(){
 			setInterval(function(){
-				$('.my-cool-content').removeClass('boom');
-				set
+				$('.my-cool-content').addClass('boom');
+				setTimeout(function(){
+					$('.my-cool-content').removeClass('boom');
+				}, 400)
 				clearInterval();
-			}, 3000);
+			}, 1500);
 		});
 	}(jQuery));
 </script>
