@@ -20,7 +20,6 @@ So Premise Boxes solves this problem by alliwng John to code in a separate edito
 		animation-name: palp;
 		animation-duration: .2s;
 		animation-direction: linear;
-		/*animation-fill-mode: forwards;*/
 		animation-iteration-count: infinite;
 	}
 	@keyframes palp {
