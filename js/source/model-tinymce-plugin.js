@@ -6,7 +6,6 @@
 			shortcode_data: {},
 			template: media.template( 'editor-pwp-boxes' ),
 			getContent: function() {
-				console.log( this.shortcode);
 				var options = this.shortcode.attrs.named;
 				// options.pbox_innercontent = this.shortcode.pbox_innercontent;
 				return this.template(options);
@@ -38,60 +37,7 @@
 			    var dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 
 				if(typeof onsubmit_callback !== 'function'){
-					onsubmit_callback = function( e ) {
-						// get the form
-						var dialog_form = ( e.currentTarget instanceof jQuery ) ? e.currentTarget : $( e.currentTarget ),
-						_data = dialog_form.serializeArray(),
-						attrs = {};
-
-						// build attributes object
-						$.map( _data, pboxesBuildAttrs );
-
-						attrs.thumbnail = '/wp-content/plugins/Premise-Boxes/img/sc-icon.png';
-						var _cont = attrs.pbox_innercontent; // do something
-						delete attrs.pbox_innercontent;
-
-
-						// Insert content when the window form is submitted (this also replaces during edit, handy!)
-						var args = {
-							tag     : shortcode_string,
-							type    : _cont.length ? 'closed' : 'single',
-							content : _cont,
-							attrs   : attrs,
-						};
-						editor.insertContent( wp.shortcode.string( args ) );
-
-						theForm[0].reset();
-						if ( dialog_editor ) {
-							dialog_editor.setContent( '' );
-						}
-
-						// build our attributes object. exclude the inner content
-						function pboxesBuildAttrs( $n ) {
-							attrs[$n.name] = ( 'pbox_wrapper' !== $n.name && 'pbox_innercontent' !== $n.name )
-									? $n.value
-									: encodeURIComponent( $n.value );
-
-							// if ( 'pbox_innercontent' == $n.name ) {
-							// 	var regexp = /\[([^<>&/\[\]= ]+)/g;
-							// 	var shortcodes = $n.value.match( /\[([^<>&/\[\]= ]+)/g );
-
-							// 	if ( shortcodes ) {
-							// 		attrs['content'] = encodeURIComponent( $n.value );
-							// 		attrs[$n.name] = '<img src="/wp-content/plugins/Premise-Boxes/img/sc-icon.png" class="pwp-responsive" />';
-							// 	}
-							// 	else {
-							// 		attrs['content'] = $n.value;
-							// 		attrs[$n.name] = $n.value;
-							// 	}
-							// }
-							// else {
-							// 	attrs[$n.name] = ( 'pbox_innercontent' !== $n.name && 'pbox_wrapper' !== $n.name )
-							// 		? $n.value
-							// 		: encodeURIComponent( $n.value );
-							// }
-						};
-					};
+					onsubmit_callback = pboxesInsertShortcode
 				};
 
 				// If we have values, enter them into our form
@@ -116,23 +62,72 @@
 			    // bind our actions for when the form is submitted
 				theForm.off().submit( function( e ) {
 					e.preventDefault();
-				    $( '#pboxes_dialog' ).fadeOut( 'fast' );
+				    pboxesDialog.fadeOut( 'fast' );
 				    onsubmit_callback( e );
 			    	return false;
 				} );
 
-				$( '.pboxes-dialog-close' ).off().click(function() {
-					$( '#pboxes_dialog' ).fadeOut( 'fast' );
+				pboxesDialogCloase.off().click(function() {
+					pboxesDialog.fadeOut( 'fast' );
 					theForm[0].reset();
 					if ( dialog_editor ) {
 			    		dialog_editor.setContent( '' );
 			    	}
 				})
 
-				$( '#pboxes_dialog' ).fadeIn( 'fast' );
+				pboxesDialog.fadeIn( 'fast' );
+
+
+				/*
+					Helpers
+				 */
+
+				function pboxesInsertShortcode( e ) {
+					// get the form
+					var dialog_form = ( e.currentTarget instanceof jQuery ) ? e.currentTarget : $( e.currentTarget ),
+					_data = dialog_form.serializeArray(),
+					attrs = {};
+
+					// build attributes object
+					$.map( _data, pboxesBuildAttrs );
+
+					var _cont = attrs.pbox_innercontent; // do something
+					delete attrs.pbox_innercontent;
+
+
+					// Insert content when the window form is submitted (this also replaces during edit, handy!)
+					var args = {
+						tag     : shortcode_string,
+						type    : _cont.length ? 'closed' : 'single',
+						content : _cont,
+						attrs   : attrs,
+					};
+					editor.insertContent( wp.shortcode.string( args ) );
+
+					theForm[0].reset();
+					if ( dialog_editor ) {
+						dialog_editor.setContent( '' );
+					}
+
+					/**
+					 * Build attributes for shortcode before inserting it into the editor.
+					 *
+					 * @param  {object} $n the option being deal with
+					 * @return {void}      builds attributes. does not return anything.
+					 */
+					function pboxesBuildAttrs( $n ) {
+						attrs[$n.name] = ( 'pbox_wrapper' !== $n.name && 'pbox_innercontent' !== $n.name )
+								? $n.value
+								: encodeURIComponent( $n.value );
+					};
+				};
 			}
-		};
+		}; // pwp_boxes
+
+		var pboxesDialog   = $( '#pboxes_dialog' ),
+		pboxesDialogCloase = pboxesDialog.find( '#pboxes_dialog' ),
+		pboxWrapper        = CodeMirror.fromTextArea( $('#pbox_wrapper')[0], {theme: 'monokai'} );
+
 		wp.mce.views.register( shortcode_string, wp.mce.pwp_boxes );
-		var pboxWrapper = CodeMirror.fromTextArea($('#pbox_wrapper')[0], {theme: 'monokai'});
 	});
 }(jQuery));
