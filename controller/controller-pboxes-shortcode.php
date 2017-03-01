@@ -66,7 +66,7 @@ class PBoxes_Shortcode {
 				echo do_shortcode( str_replace( '%%CONTENT%%', urldecode( $content ), urldecode( $a['pbox_wrapper'] ) ) );
 			}
 			else {
-				echo d-_shortcode( urldecode( $content ) );
+				echo do_shortcode( urldecode( $content ) );
 			} ?>
 		</div>
 		<?php
