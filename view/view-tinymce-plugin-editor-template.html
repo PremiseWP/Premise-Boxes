@@ -1,13 +1,8 @@
 <script type="text/html" id="tmpl-editor-pwp-boxes">
 	<div class="pboxes-box {{ data.pbox_class }}" id="{{ data.pbox_id }}">
-		<# if ( data.pbox_wrapper ) { #>
-			<div class="pboxes-box-content">
-				<# var html = decodeURIComponent(data.pbox_wrapper).replace( '%%CONTENT%%', data.pbox_innercontent ); #>
-				{{{html}}}
-			</div>
-		<# }
-		else if ( data.pbox_innercontent ) { #>
-			<div class="pboxes-box-content">{{{data.pbox_innercontent}}}</div>
-		<# } #>
+		<# var img = ( data.thumbnail ) ? data.thumbnail : '/wp-content/plugins/Premise-Boxes/img/sc-icon.png'; #>
+		<div class="pboxes-box-content">
+			<img src="{{img}}" class="pwp-responsive" />
+		</div>
 	</div>
 </script>

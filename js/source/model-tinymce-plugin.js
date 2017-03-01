@@ -6,8 +6,9 @@
 			shortcode_data: {},
 			template: media.template( 'editor-pwp-boxes' ),
 			getContent: function() {
+				console.log( this.shortcode);
 				var options = this.shortcode.attrs.named;
-				options.pbox_innercontent = this.shortcode.content;
+				// options.pbox_innercontent = this.shortcode.pbox_innercontent;
 				return this.template(options);
 			},
 			View: { // before WP 4.2:
@@ -46,11 +47,16 @@
 						// build attributes object
 						$.map( _data, pboxesBuildAttrs );
 
+						attrs.thumbnail = '/wp-content/plugins/Premise-Boxes/img/sc-icon.png';
+						var _cont = attrs.pbox_innercontent; // do something
+						delete attrs.pbox_innercontent;
+
+
 						// Insert content when the window form is submitted (this also replaces during edit, handy!)
 						var args = {
 							tag     : shortcode_string,
-							type    : attrs.pbox_innercontent.length ? 'closed' : 'single',
-							content : attrs.pbox_innercontent,
+							type    : _cont.length ? 'closed' : 'single',
+							content : _cont,
 							attrs   : attrs,
 						};
 						editor.insertContent( wp.shortcode.string( args ) );
@@ -62,9 +68,28 @@
 
 						// build our attributes object. exclude the inner content
 						function pboxesBuildAttrs( $n ) {
-							attrs[$n.name] = ( 'pbox_wrapper' !== $n.name )
-								? $n.value
-								: encodeURIComponent( $n.value );
+							attrs[$n.name] = ( 'pbox_wrapper' !== $n.name && 'pbox_innercontent' !== $n.name )
+									? $n.value
+									: encodeURIComponent( $n.value );
+
+							// if ( 'pbox_innercontent' == $n.name ) {
+							// 	var regexp = /\[([^<>&/\[\]= ]+)/g;
+							// 	var shortcodes = $n.value.match( /\[([^<>&/\[\]= ]+)/g );
+
+							// 	if ( shortcodes ) {
+							// 		attrs['content'] = encodeURIComponent( $n.value );
+							// 		attrs[$n.name] = '<img src="/wp-content/plugins/Premise-Boxes/img/sc-icon.png" class="pwp-responsive" />';
+							// 	}
+							// 	else {
+							// 		attrs['content'] = $n.value;
+							// 		attrs[$n.name] = $n.value;
+							// 	}
+							// }
+							// else {
+							// 	attrs[$n.name] = ( 'pbox_innercontent' !== $n.name && 'pbox_wrapper' !== $n.name )
+							// 		? $n.value
+							// 		: encodeURIComponent( $n.value );
+							// }
 						};
 					};
 				};
@@ -84,7 +109,7 @@
 
 			    	} );
 			    	if ( dialog_editor ) {
-			    		dialog_editor.setContent( values.pbox_innercontent );
+			    		dialog_editor.setContent( decodeURIComponent( values.pbox_innercontent ) );
 			    	}
 			    };
 

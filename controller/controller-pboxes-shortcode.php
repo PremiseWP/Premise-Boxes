@@ -63,10 +63,10 @@ class PBoxes_Shortcode {
 		?>
 		<div class="pboxes-box <?php echo esc_attr( $a['pbox_class'] ); ?>" id="<?php echo esc_attr( $a['pbox_id'] ); ?>">
 			<?php if ( ! empty( $a['pbox_wrapper'] ) ) {
-				echo str_replace( '%%CONTENT%%', $content, urldecode( $a['pbox_wrapper'] ) );
+				echo do_shortcode( str_replace( '%%CONTENT%%', urldecode( $content ), urldecode( $a['pbox_wrapper'] ) ) );
 			}
 			else {
-				echo $content;
+				echo d-_shortcode( urldecode( $content ) );
 			} ?>
 		</div>
 		<?php
