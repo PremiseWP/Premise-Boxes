@@ -1,5 +1,10 @@
 (function($){
 	$(document).ready(function(){
+
+		var pboxesDialog   = $( '#pboxes_dialog' ),
+		pboxesDialogClose = pboxesDialog.find( '.pboxes-dialog-close' ),
+		pboxWrapper        = CodeMirror.fromTextArea( $('#pbox_wrapper')[0], {theme: 'monokai'} );
+
 		var media = wp.media, shortcode_string = 'pwp_boxes';
 		wp.mce = wp.mce || {};
 		wp.mce.pwp_boxes = {
@@ -29,80 +34,39 @@
 				values.pbox_innercontent = shortcode_data.shortcode.content;
 				wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, values);
 			},
+
 			// this is called from our tinymce plugin, also can call from our "edit" function above
 			// wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, "bird");
-			popupwindow: function(editor, values, onsubmit_callback) {
-				values = values || {};
-				var theForm       = $( '#pboxes-dialog-form' ),
-				dialogSubmit = $('#pboxes-submit-box');
-			    var dialog_editor = tinyMCE.get( 'pbox_innercontent' );
+			popupwindow: function( editor, values, onsubmit_callback ) {
+				editor = editor || wpActiveEditor;
+				values = values || {}; // console.log( values );
 
-				if(typeof onsubmit_callback !== 'function'){
-					onsubmit_callback = pboxesInsertShortcode
+				var theForm   = $( '#pboxes-dialog-form' ),
+				dialogSubmit  = $('#pboxes-submit-box'),
+				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
+
+				// set our callback
+				if ( typeof onsubmit_callback !== 'function' ) {
+					onsubmit_callback = pboxesInsertShortcode;
 				};
-console.log( values );
+
 				// If we have values, enter them into our form
-			    if ( Object.keys( values ).length ) {
-			    	var input = theForm.find( '[name^="pbox_"]' );
+				if ( Object.keys( values ).length ) {
+					getSetFields( values );
+				};
 
-			    	input.each( function() {
-			    		var $this = $( this ),
-			    		_val = values[ $this.attr( 'name' ) ];
-
-			    		if ( $this.is( '#pbox_wrapper' ) ) {
-			    			pboxWrapper.setValue( decodeURIComponent( pboxWrapper.getTextArea().value ) );
-			    		}
-			    		else if ( $this.is( '#pbox_innercontent' ) ) {
-			    			$this.val( decodeURIComponent( _val ) );
-			    		}
-			    		else {
-			    			$this.val( _val );
-			    		}
-
-			    	} );
-			    	if ( dialog_editor ) {
-			    		dialog_editor.setContent( decodeURIComponent( values.pbox_innercontent ) );
-			    	}
-			    };
-
-			    // bind our actions for when the form is submitted
-				theForm.off().submit( function( e ) {
-					e.preventDefault();
-				    pboxesDialog.fadeOut( 'fast' );
-				    var dialog_form = $( e.currentTarget ),
-					_data = dialog_form.serializeArray();
-				    onsubmit_callback( _data );
-			    	return false;
-				} );
-
+				// bind submit button
 				dialogSubmit.off().click(function(e){
 					e.preventDefault();
-
-					var _data = theForm.serializeArray();
-					if ( dialog_editor ) {
-						console.log( 'dialog_editor.getContent():' );
-						console.log( dialog_editor.getContent() );
-					}
-					else {
-						console.log( '_data.pbox_innercontent:' );
-						console.log( _data.pbox_innercontent );
-					}
-					// $( '#pboxes-dialog-form' ).trigger( 'submit' );
-				 //    pboxesDialog.fadeOut( 'fast' );
-				 //    var _data = theForm.serializeArray();
-				 //    onsubmit_callback( _data );
-					// console.log('insert clicked');
-			    	return false;
+					onsubmit_callback( editor, getSetFields() );
+					closeDialog();
+					return false;
 				});
 
-				pboxesDialogClose.off().click(function() {
-					pboxesDialog.fadeOut( 'fast' );
-					theForm[0].reset();
-					if ( dialog_editor ) {
-			    		dialog_editor.setContent( '' );
-			    	}
-				});
+				// bind close button
+				pboxesDialogClose.off().click(closeDialog);
 
+				// open our dialog
 				pboxesDialog.fadeIn( 'fast' );
 
 
@@ -110,16 +74,11 @@ console.log( values );
 					Helpers
 				 */
 
-				/**
-				 * Insert the shortcode into the editor
-				 *
-				 * @param  {object} e the event that was fired
-				 * @return {void}     inserts the shortcode
-				 */
-				function pboxesInsertShortcode( _data ) {
+				// inesrt the shortcode
+				function pboxesInsertShortcode( editor, _data ) {
 					// get the form
 					var attrs = {}, _cont = '', args = {};
-console.log( _data );
+
 					// build attributes object
 					$.map( _data, pboxesBuildAttrs );
 
@@ -137,31 +96,120 @@ console.log( _data );
 
 					// insert shortcode
 					editor.insertContent( wp.shortcode.string( args ) );
-					console.log('shortcode inserted with the following args:');
-					console.log( args );
 
 					// reset the form
 					theForm[0].reset();
 					dialog_editor && dialog_editor.setContent( '' );
 
-					/**
-					 * Build attributes for shortcode before inserting it into the editor.
-					 *
-					 * @param  {object} $n the option being deal with
-					 * @return {void}      builds attributes. does not return anything.
-					 */
+					// build attributes
 					function pboxesBuildAttrs( $n ) {
-						attrs[$n.name] = ( 'pbox_wrapper' !== $n.name && 'pbox_innercontent' !== $n.name )
-								? $n.value
-								: encodeURIComponent( $n.value );
+						attrs[$n.name] = $n.value;
 					};
 				};
+
+				// cloase the dialog
+				function closeDialog() {
+					pboxesDialog.fadeOut( 'fast' );
+					theForm[0].reset();
+					if ( dialog_editor ) {
+						dialog_editor.setContent( '' );
+					}
+				}
+
+				// get the content
+				function tmce_getContent(editor_id, textarea_id) {
+					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
+					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+						return tinyMCE.get(editor_id).getContent();
+					}else{
+						return jQuery('#'+textarea_id).val();
+					}
+				}
+
+				// set the content
+				function tmce_setContent(content, editor_id, textarea_id) {
+					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
+					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+						return tinyMCE.get(editor_id).setContent(content);
+					}else{
+						return jQuery('#'+textarea_id).val(content);
+					}
+				}
+
+				// focus on the editor
+				function tmce_focus(editor_id, textarea_id) {
+					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
+					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+						return tinyMCE.get(editor_id).focus();
+					}else{
+						return jQuery('#'+textarea_id).focus();
+					}
+				}
+
+				// get or set our fields.
+				// if values is passed then it sets, otherwise it gets
+				function getSetFields( values ) {
+					values = values || null;
+					// get the form fields that apply to the shortcode
+					// the one that have name attribute 'pbox_..'
+					var fields = theForm.find( '[name^="pbox_"]' ),
+					returnFields = [];
+
+					for ( var i = fields.length - 1; i >= 0; i-- ) {
+
+						var _f = $( fields[i] ),    // field
+						_n     = _f.attr( 'name' ), // name
+						_v     = ( values ) ? values[ _n ] : '';      // value
+
+						if ( null === values ) {
+							switch( _n ) {
+								// get the value for the inner content
+								case 'pbox_innercontent' :
+									_v = encodeURIComponent( tmce_getContent( 'pbox_innercontent', 'pbox_innercontent' ) );
+								break;
+
+								// get the value for our wrapper
+								case 'pbox_wrapper' :
+									_v = encodeURIComponent( pboxWrapper.getValue() );
+								break;
+
+								default:
+									_v = _f.val();
+								break;
+							}
+							returnFields.push({ name: _n, value: _v });
+						}
+						else {
+							switch( _n ) {
+								// enter the value for the inner content
+								case 'pbox_innercontent' :
+									tmce_setContent( decodeURIComponent( _v ), 'pbox_innercontent', 'pbox_innercontent');
+								break;
+
+								// enter the value for our wrapper
+								case 'pbox_wrapper' :
+									pboxWrapper.setValue( decodeURIComponent( values[ _n ] ) );
+								break;
+
+								default:
+									_f.val( _v );
+								break;
+							}
+						}
+					}
+
+					if ( returnFields.length ) {
+						return returnFields;
+					}
+				}
 			}
 		}; // pwp_boxes
-
-		var pboxesDialog   = $( '#pboxes_dialog' ),
-		pboxesDialogClose = pboxesDialog.find( '.pboxes-dialog-close' ),
-		pboxWrapper        = CodeMirror.fromTextArea( $('#pbox_wrapper')[0], {theme: 'monokai'} );
 
 		wp.mce.views.register( shortcode_string, wp.mce.pwp_boxes );
 	});
