@@ -1,0 +1,6 @@
+/**
+ * Pboxes View styles
+ */
+.wpview[data-wpview-type="pwp_boxes"] {
+	display: inline-block;
+}
