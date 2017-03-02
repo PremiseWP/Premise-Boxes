@@ -10,16 +10,28 @@ body.wp-admin #pboxes_dialog {
 	top: 10%;
 	right: 10%;
 	width: 80%;
-	height: auto;
+	height: 700px;
 	max-width: 600px;
 	max-height: 80%;
-	z-index: 100101; /* Important to stay above the shortcode UI controls */
+	z-index: 10010; /* Important to stay above the shortcode UI controls */
 	background: rgba(255, 255, 255, 1);
-	overflow: auto;
+	/*overflow: auto;*/
 	border: 1px solid #888;
 	box-sizing: border-box;
-	padding: 60px 20px 20px 20px;
+	padding: 0;
 	box-sizing: border-box;
+}
+
+.pboxes-dialog-body {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	box-sizing: border-box;
+	overflow: auto;
 }
 
 .pboxes-dialog-controls {
@@ -30,12 +42,15 @@ body.wp-admin #pboxes_dialog {
 }
 
 .pboxes-dialog-header {
-	position: absolute;top: 0;
+	position: relative;
+	top: 0;
 	left: 0;
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
 	border-bottom: 1px solid #888;
+	z-index: 2;
+	background-color: #fff;
 }
 
 .pboxes-dialog-header h2 {
@@ -90,17 +105,25 @@ body.wp-admin #pboxes_dialog {
 	opacity: 1;
 }
 
-#pboxes_dialog #pbox_innercontent_ifr {
+/*
+	The form
+ */
+#pboxes-dialog-form {
+	padding: 20px;
+	overflow: auto;
+}
+
+#pboxes-dialog-form #pbox_innercontent_ifr {
 	min-height: 300px;
 }
 
-#pboxes_dialog .pboxes-box-submit {
+#pboxes-dialog-form .pboxes-box-submit {
 	margin-top: 20px;
 }
 
 #pboxes-content-editor {
 	position: relative;
-	min-height: 550px; /* Editor is at least 300px */
+	min-height: 485px; /* Editor is at least 300px */
 }
 
 #pboxes-content-editor .pboxes-code-editor,
@@ -120,4 +143,25 @@ body.wp-admin #pboxes_dialog {
 #pboxes-content-editor .pboxes-wysiwyg-editor.pboxes-show {
 	opacity: 1;
 	z-index: 1;
+}
+
+
+.pboxes-dialog-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 1px solid #888;
+	z-index: 2;
+	background-color: #fff;
+}
+
+#pboxes-submit-box {
+	display: inline-block;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 20px;
+	border-left: 1px solid #888;
+	color: #222444;
+	text-decoration: none;
 }
