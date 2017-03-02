@@ -96,51 +96,60 @@ class PBoxes_Tinymce_Plugin {
 						</span>
 					</div>
 				</div>
-			<h2>Premise Box</h2>
+				<h2>Premise Box</h2>
 			</div>
-			<form id="pboxes-dialog-form" action="" method="post">
+			<div class="pboxes-dialog-body">
+				<form id="pboxes-dialog-form" action="" method="post">
 
-					<?php
-					// insert a class
-					premise_field( '', array(
-						'label'         => 'Insert a class',
-						'name'          => 'pbox_class',
-						'wrapper_class' => 'span6',
-						'before_wrapper'  => '<div class="premise-row">',
-					) );
-					// insert an id
-					premise_field( '', array(
-						'label'         => 'Insert an id',
-						'name'          => 'pbox_id',
-						'wrapper_class' => 'span6',
-						'after_wrapper'  => '</div>',
-					) );
-					?>
-
-					<div id="pboxes-content-editor">
-						<div class="pwp-align-right">
-							<a href="javascript:void(0);" class="pboxes-toggle-editors pwp-inline-block">Toggle Editors</a>
-						</div>
 						<?php
-						// insert content
-						premise_field( 'textarea', array(
-							// 'label'         => 'HTML Wrapper',
-							'name'          => 'pbox_wrapper',
-							'wrapper_class' => 'span12',
-							'before_wrapper'  => '<div class="pboxes-code-editor">',
+						// insert a class
+						premise_field( '', array(
+							'label'         => 'Insert a class',
+							'name'          => 'pbox_class',
+							'wrapper_class' => 'span6',
+							'before_wrapper'  => '<div class="premise-row">',
+						) );
+						// insert an id
+						premise_field( '', array(
+							'label'         => 'Insert an id',
+							'name'          => 'pbox_id',
+							'wrapper_class' => 'span6',
 							'after_wrapper'  => '</div>',
-							'before_field'  => '<h3>Code Editor</h3><p>Use this editor for additional control over your box. Enter wrapper html and use <code>%%CONTENT%%</code> to insert the content.</p>',
-						) ); ?>
+						) );
+						?>
 
-						<div class="pboxes-wysiwyg-editor span12 pboxes-show">
-							<h3>Your Box Content</h3>
-							<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent', 'teeny' => true, 'editor_height' => 300 ) ); ?>
+						<div id="pboxes-content-editor">
+							<div class="pwp-align-right">
+								<a href="javascript:void(0);" class="pboxes-toggle-editors pwp-inline-block">Toggle Editors</a>
+							</div>
+							<?php
+							// insert content
+							premise_field( 'textarea', array(
+								// 'label'         => 'HTML Wrapper',
+								'name'          => 'pbox_wrapper',
+								'wrapper_class' => 'span12',
+								'before_wrapper'  => '<div class="pboxes-code-editor">',
+								'after_wrapper'  => '</div>',
+								'before_field'  => '<h3>Code Editor</h3><p>Use this editor for additional control over your box. Enter wrapper html and use <code>%%CONTENT%%</code> to insert the content.</p>',
+							) ); ?>
+
+							<div class="pboxes-wysiwyg-editor span12 pboxes-show">
+								<h3>Your Box Content</h3>
+								<?php wp_editor( '', 'pbox_innercontent', array( 'name' => 'pbox_innercontent', 'teeny' => true, 'editor_height' => 300 ) ); ?>
+							</div>
 						</div>
-					</div>
 
-				<?php premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
+					<?php premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
 
-			</form>
+				</form>
+			</div>
+			<div class="pboxes-dialog-footer pwp-clear-float">
+				<div class="pwp-float-right">
+					<a href="javascript:;" id="pboxes-submit-box">
+						Insert Box
+					</a>
+				</div>
+			</div>
 		</div>
 		<?php
 	}
