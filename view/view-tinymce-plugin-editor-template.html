@@ -3,8 +3,14 @@
 		<# if ( data.pbox_innercontent ) {
 			var content = decodeURIComponent(data.pbox_innercontent); #>
 			<div class="pboxes-box-content">{{{content}}}</div>
+		<# }
+		else {
+			var img = ( data.thumbnail ) ? data.thumbnail : '/wp-content/plugins/Premise-Boxes/img/sc-icon.png'; #>
+			<div class="pboxes-placeholder">
+				<img src="{{img}}" class="pwp-responsive" />
+				<span> This box has not content</span>
+			</div>
 		<# } #>
-		<# var img = ( data.thumbnail ) ? data.thumbnail : '/wp-content/plugins/Premise-Boxes/img/sc-icon.png'; #>
 		<!-- <div class="pboxes-box-content">
 			<img src="{{img}}" class="pwp-responsive" />
 		</div> -->
