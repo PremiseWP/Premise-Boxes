@@ -36,8 +36,6 @@ class PBoxes_Shortcode {
 		return self::$instance;
 	}
 
-
-
 	/**
 	 * Leave blank and public on purpose
 	 */
@@ -59,18 +57,18 @@ class PBoxes_Shortcode {
 			'pbox_wrapper' => '',
 		), $attrs, 'pwp_boxes' );
 
-		ob_start();
-		?>
-		<div class="pboxes-box <?php echo esc_attr( $a['pbox_class'] ); ?>" id="<?php echo esc_attr( $a['pbox_id'] ); ?>">
-			<?php if ( ! empty( $a['pbox_wrapper'] ) ) {
-				echo do_shortcode( str_replace( '%%CONTENT%%', urldecode( $content ), urldecode( $a['pbox_wrapper'] ) ) );
-			}
-			else {
-				echo do_shortcode( urldecode( $content ) );
-			} ?>
-		</div>
-		<?php
+		// get content decoded and fix for 'x'
+		$_cont = str_replace( '&#215;', 'x', urldecode( $content ) );
 
+		// get wrapper decoded
+		$_wrap = urldecode( $a['pbox_wrapper'] );
+
+		$_sc_html = do_shortcode( ( ! empty( $_wrap ) ) ? str_replace( '%%CONTENT%%', $_cont, $_wrap ) : $_cont );
+
+		ob_start();
+		?><div class="pboxes-box <?php echo esc_attr( $a['pbox_class'] ); ?>" id="<?php echo esc_attr( $a['pbox_id'] ); ?>">
+			<?php echo $_sc_html; ?>
+		</div><?
 		$html = ob_get_clean();
 
 		return $html;
