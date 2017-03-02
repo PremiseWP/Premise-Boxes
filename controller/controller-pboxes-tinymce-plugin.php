@@ -139,7 +139,7 @@ class PBoxes_Tinymce_Plugin {
 							</div>
 						</div>
 
-					<?php premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
+					<?php // premise_field( 'submit', array( 'wrapper_class' => 'premise-align-right pboxes-box-submit' ) ); ?>
 
 				</form>
 			</div>
