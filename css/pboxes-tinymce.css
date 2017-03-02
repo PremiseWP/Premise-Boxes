@@ -4,3 +4,20 @@
 .wpview[data-wpview-type="pwp_boxes"] {
 	display: inline-block;
 }
+
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-placeholder {
+	display: inline-block;
+	/*width: 100px;*/
+}
+
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-placeholder img {
+	max-width: 60px;
+	margin-right: 20px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-placeholder span {
+	vertical-align: middle;
+	display: inline-block;
+}
