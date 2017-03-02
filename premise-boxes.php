@@ -120,13 +120,13 @@ class Premise_Boxes {
 		// This is premature because we are still wrapping the shortcode in a another element
 		// the wpview element that has its own styling. We'll figure this out when we figure out
 		// how to create columns dynamically.
-		// 	add_action( 'admin_init', 'my_theme_add_editor_styles' );
-		// 	function my_theme_add_editor_styles() {
-		// 		$pboxes_editor_css = array(
-		// 			plugins_url('Premise-WP/', 'premise.php' ) . 'css/Premise-WP.min.css',
-		// 		);
-		// 		add_editor_style( $pboxes_editor_css );
-		// 	}
+			add_action( 'admin_init', 'my_theme_add_editor_styles' );
+			function my_theme_add_editor_styles() {
+				$pboxes_editor_css = array(
+					PBOXES_URL . 'css/pboxes-tinymce.css',
+				);
+				add_editor_style( $pboxes_editor_css );
+			}
 	}
 
 	/**
