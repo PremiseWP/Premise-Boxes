@@ -49,6 +49,15 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= 1.0.4 =
+* fixed issue: 'undefined' was added to the content of the box when editing a box that was previously empty (had no content).
+
+= 1.0.3 =
+* Added code editor for developers.
+* Added placeholder for when there is no content being inserted in a box.
+* Added some styles for tinymce.
+* Organized JS files to be more comprehensive.
+
 = 1.0.2 =
 * Fixed issue when inserting other shortcodes or content that create conflicts with the editor.
 * Added a placeholder so that when there is no content the shortcode can still be selected.
