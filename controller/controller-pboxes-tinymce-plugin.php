@@ -91,8 +91,9 @@ class PBoxes_Tinymce_Plugin {
 					<div class="pboxes-dialog-control pboxes-dialog-tooltip premise-float-right">
 						<i class="fa fa-question"></i>
 						<span>
-							<p>A box allows you to wrap content from the WYSIWYG editor within a div element. Developer can add classes and ids to this element that do something fun in the fornt end. Project/content managers can worry about the content itself with out dealing with the code.</p>
-							<p>For even more control over the HTML the code editor lets developers insert html that wraps the content.</p>
+							<p>A box allows you to wrap content from the WYSIWYG editor within HTML.</p>
+							<p>Content managers can insert content using the WYSIWYG editor while developers insert HTML to manipulate said content in a secific way.</p>
+							<p>From the developer's UI you can also set classes and/or an id for the box.</p>
 						</span>
 					</div>
 				</div>

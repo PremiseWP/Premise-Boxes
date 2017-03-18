@@ -45,6 +45,8 @@
 				dialogSubmit  = $('#pboxes-submit-box'),
 				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 
+				theForm.focus();
+
 				// set our callback
 				if ( typeof onsubmit_callback !== 'function' ) {
 					onsubmit_callback = pboxesInsertShortcode;
