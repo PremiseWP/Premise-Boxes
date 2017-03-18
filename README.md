@@ -61,6 +61,9 @@ CodeMirror is a in-browser code editor. We use it on the code editor for develop
 
 ## Changelog
 
+**v1.0.5**
+* moved class and id to the code editor section.
+
 **v1.0.4**
 * fixed issue: 'undefined' was added to the content of the box when editing a box that was previously empty (had no content).
 
