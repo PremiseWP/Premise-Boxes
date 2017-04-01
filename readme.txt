@@ -49,6 +49,9 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= v1.0.7 =
+* fixed issue with some files being mixed up.
+
 = v1.0.6 =
 * Require Pemise WP 2.0 or newer.
 * New shortcode icon used for the tinyMCE button and when inserting empty boxes.

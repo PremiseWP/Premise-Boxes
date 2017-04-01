@@ -61,6 +61,9 @@ CodeMirror is a in-browser code editor. We use it on the code editor for develop
 
 ## Changelog
 
+**v1.0.7**
+* fixed issue with some files being mixed up.
+
 **v1.0.6**
 * Require Pemise WP 2.0 or newer.
 * New shortcode icon used for the tinyMCE button and when inserting empty boxes.
