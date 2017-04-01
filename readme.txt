@@ -49,6 +49,15 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= v1.0.6 =
+* Require Pemise WP 2.0 or newer.
+* New shortcode icon used for the tinyMCE button and when inserting empty boxes.
+* Moved img dir to the js dir so that we can call the plugin's url dynamically.
+
+= v1.0.5 =
+* moved class and id to the code editor section.
+* added plugin url
+
 = 1.0.4 =
 * fixed issue: 'undefined' was added to the content of the box when editing a box that was previously empty (had no content).
 
