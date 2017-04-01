@@ -91,7 +91,7 @@
 					// build arguments for shortcode
 					args = {
 						tag     : shortcode_string,
-						type    : _cont.length ? 'closed' : 'single',
+						type    : _cont.length ? 'closed' : 'self-closing',
 						content : _cont,
 						attrs   : attrs,
 					};
