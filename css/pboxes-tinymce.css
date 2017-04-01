@@ -5,9 +5,26 @@
 	display: inline-block;
 }
 
-.wpview[data-wpview-type="pwp_boxes"] .pboxes-placeholder {
-	display: inline-block;
-	/*width: 100px;*/
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-box {
+	padding: 8px 12px 3px 3px;
+	position: relative;
+}
+
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-box:before {
+	position: absolute;
+	content: '';
+	display: block;
+	width: 25px;
+	height: 25px;
+	top: 0;
+	right: 0;
+	background: url(/wp-content/plugins/premise-boxes/js/img/pboxes-icon-md.png) no-repeat center center / contain;
+}
+
+.wpview[data-wpview-type="pwp_boxes"] .pboxes-box-content {
+	border: 1px dashed #ccc;
+	padding: 2px;
+	transition: border 4s ease;
 }
 
 .wpview[data-wpview-type="pwp_boxes"] .pboxes-placeholder img {

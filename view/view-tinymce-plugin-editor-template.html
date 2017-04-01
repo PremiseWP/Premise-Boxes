@@ -1,18 +1,12 @@
 <script type="text/html" id="tmpl-editor-pwp-boxes">
 	<div class="pboxes-box {{ data.pbox_class }}" id="{{ data.pbox_id }}">
-		<# if ( data.pbox_innercontent ) {
-			var content = decodeURIComponent(data.pbox_innercontent); #>
-			<div class="pboxes-box-content">{{{content}}}</div>
-		<# }
-		else {
-			var img = ( data.thumbnail ) ? data.thumbnail : '/wp-content/plugins/premise-boxes/js/img/pboxes-icon-md.png'; #>
-			<div class="pboxes-placeholder">
-				<img src="{{img}}" class="pwp-responsive" />
-				<span> This box has not content</span>
-			</div>
-		<# } #>
-		<!-- <div class="pboxes-box-content">
-			<img src="{{img}}" class="pwp-responsive" />
-		</div> -->
+		<div class="pboxes-box-content">
+			<# if ( data.pbox_innercontent ) {
+				var content = decodeURIComponent(data.pbox_innercontent); #>
+				{{{content}}}
+			<# } else { #>
+					<p>Empty Box</p>
+			<# } #>
+		</div>
 	</div>
 </script>
