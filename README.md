@@ -61,6 +61,10 @@ CodeMirror is a in-browser code editor. We use it on the code editor for develop
 
 ## Changelog
 
+**v1.0.8**
+* Ensure shortcode self closes to avoid conflicts with other boxes in the page.
+* Styled boxes in the editor so it is easy to recognize where there is a box inserted in the content.
+
 **v1.0.7**
 * fixed issue with some files being mixed up.
 
