@@ -12,7 +12,7 @@
 		shortcode_string   = 'pwp_boxes';
 
 		wp.media = wp.media || {};
-		wp.mce   = wp.mce || {};
+		wp.mce   = wp.mce   || {};
 
 		// our plugin
 		wp.mce.pwp_boxes = {
@@ -43,9 +43,11 @@
 
 				var theForm   = $( '#pboxes-dialog-form' ),
 				dialogSubmit  = $('#pboxes-submit-box'),
-				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
+				dialog_editor = tinyMCE.get( 'pbox_innercontent' ),
 
-				theForm.focus();
+				_selected = editor.selection;
+
+				// theForm.focus();
 
 				// set our callback
 				if ( typeof onsubmit_callback !== 'function' ) {
@@ -60,7 +62,7 @@
 				// bind submit button
 				dialogSubmit.off().click(function(e){
 					e.preventDefault();
-					onsubmit_callback( editor, getSetFields() );
+					onsubmit_callback( getSetFields() );
 					closeDialog();
 					return false;
 				});
@@ -77,7 +79,8 @@
 				 */
 
 				// inesrt the shortcode
-				function pboxesInsertShortcode( editor, _data ) {
+				function pboxesInsertShortcode( _data ) {
+console.log(_selected.getContent());
 					// get the form
 					var attrs = {}, _cont = '', args = {};
 
@@ -113,9 +116,7 @@
 				function closeDialog() {
 					pboxesDialog.fadeOut( 'fast' );
 					theForm[0].reset();
-					if ( dialog_editor ) {
-						dialog_editor.setContent( '' );
-					}
+					dialog_editor && dialog_editor.setContent( '' );
 				}
 
 				// get the content
@@ -210,6 +211,7 @@
 						return returnFields;
 					}
 				}
+				return false;
 			}
 		}; // pwp_boxes
 
