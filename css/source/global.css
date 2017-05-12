@@ -13,7 +13,7 @@ body.wp-admin #pboxes_dialog {
 	height: 700px;
 	max-width: 600px;
 	max-height: 80%;
-	z-index: 10010; /* Important to stay above the shortcode UI controls */
+	z-index: 100101; /* Important to stay above the shortcode UI controls (100100) */
 	background: rgba(255, 255, 255, 1);
 	/*overflow: auto;*/
 	border: 1px solid #888;

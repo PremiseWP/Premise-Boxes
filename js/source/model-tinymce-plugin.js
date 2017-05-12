@@ -12,7 +12,7 @@
 		shortcode_string   = 'pwp_boxes';
 
 		wp.media = wp.media || {};
-		wp.mce   = wp.mce || {};
+		wp.mce   = wp.mce   || {};
 
 		// our plugin
 		wp.mce.pwp_boxes = {
@@ -33,24 +33,24 @@
 				var shortcode_data = wp.shortcode.next(shortcode_string, data);
 				var values = shortcode_data.shortcode.attrs.named;
 				values.pbox_innercontent = shortcode_data.shortcode.content || '';
-				wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, values);
+				wp.mce.pwp_boxes.popupwindow(tinyMCE.get('content'), values);
 			},
 
 			// this is called from our tinymce plugin, also can call from our "edit" function above
-			popupwindow: function( editor, values, onsubmit_callback ) {
-				editor = editor || wpActiveEditor;
-				values = values || {}; // console.log( values );
+			popupwindow: function( editor, values ) {
+				editor = editor || null;
+				values = values || {};
 
+				// reference static objects for efficiency
 				var theForm   = $( '#pboxes-dialog-form' ),
 				dialogSubmit  = $('#pboxes-submit-box'),
 				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 
-				theForm.focus();
-
-				// set our callback
-				if ( typeof onsubmit_callback !== 'function' ) {
-					onsubmit_callback = pboxesInsertShortcode;
-				};
+				// get the bookmark where the cursor was
+				// if there is content selected the bookmark
+				// will help us replace it.
+				var _bookmark     = editor.selection.getBookmark();
+				var _bookmarkHTML = $(editor.dom.doc).find('[data-mce-type="bookmark"]');
 
 				// If we have values, enter them into our form
 				if ( Object.keys( values ).length ) {
@@ -60,7 +60,17 @@
 				// bind submit button
 				dialogSubmit.off().click(function(e){
 					e.preventDefault();
-					onsubmit_callback( editor, getSetFields() );
+
+					// if we have a bookmark insert/replace our content
+					if ( _bookmark ) {
+						editor.selection.moveToBookmark( _bookmark.id );
+						editor.selection.setContent( pboxesInsertShortcode( getSetFields() ) );
+					}
+					// no bookmark, simply insert
+					else {
+						editor.insertContent( pboxesInsertShortcode( getSetFields() ) );
+					}
+
 					closeDialog();
 					return false;
 				});
@@ -71,23 +81,22 @@
 				// open our dialog
 				pboxesDialog.fadeIn( 'fast' );
 
-
 				/*
 					Helpers
 				 */
 
 				// inesrt the shortcode
-				function pboxesInsertShortcode( editor, _data ) {
+				function pboxesInsertShortcode( _data ) {
 					// get the form
 					var attrs = {}, _cont = '', args = {};
 
 					// build attributes object
-					$.map( _data, pboxesBuildAttrs );
-
+					$.map( _data, function( $n ) {
+						attrs[$n.name] = $n.value;
+					} );
 					// set content and remove the innercontent param
 					_cont = attrs.pbox_innercontent;
 					delete attrs.pbox_innercontent;
-
 					// build arguments for shortcode
 					args = {
 						tag     : shortcode_string,
@@ -97,61 +106,28 @@
 					};
 
 					// insert shortcode
-					editor.insertContent( wp.shortcode.string( args ) );
+					// editor.insertContent( wp.shortcode.string( args ) );
 
 					// reset the form
-					theForm[0].reset();
-					dialog_editor && dialog_editor.setContent( '' );
+					resetTheForm();
 
-					// build attributes
-					function pboxesBuildAttrs( $n ) {
-						attrs[$n.name] = $n.value;
-					};
+					console.log('the shortcode to insert:' + wp.shortcode.string( args ));
+					return wp.shortcode.string( args );
 				};
 
 				// cloase the dialog
 				function closeDialog() {
+					if ( _bookmarkHTML.length ) _bookmarkHTML.parent().remove();
 					pboxesDialog.fadeOut( 'fast' );
+					resetTheForm();
+				}
+
+				// resets the form
+				// cleans up the editor and codemirror
+				function resetTheForm() {
 					theForm[0].reset();
-					if ( dialog_editor ) {
-						dialog_editor.setContent( '' );
-					}
-				}
-
-				// get the content
-				function tmce_getContent(editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).getContent();
-					}else{
-						return jQuery('#'+textarea_id).val();
-					}
-				}
-
-				// set the content
-				function tmce_setContent(content, editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).setContent(content);
-					}else{
-						return jQuery('#'+textarea_id).val(content);
-					}
-				}
-
-				// focus on the editor
-				function tmce_focus(editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).focus();
-					}else{
-						return jQuery('#'+textarea_id).focus();
-					}
+					pboxWrapper   && pboxWrapper.setValue( '' );
+					dialog_editor && dialog_editor.setContent( '' );
 				}
 
 				// get or set our fields.
@@ -209,7 +185,46 @@
 					if ( returnFields.length ) {
 						return returnFields;
 					}
+
+					// get the content
+					function tmce_getContent(editor_id, textarea_id) {
+						console.log( editor_id );
+						console.log( textarea_id );
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).getContent();
+						}else{
+							return jQuery('#'+textarea_id).val();
+						}
+					}
+
+					// set the content
+					function tmce_setContent(content, editor_id, textarea_id) {
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).setContent(content);
+						}else{
+							return jQuery('#'+textarea_id).val(content);
+						}
+					}
+
+					// focus on the editor
+					function tmce_focus(editor_id, textarea_id) {
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).focus();
+						}else{
+							return jQuery('#'+textarea_id).focus();
+						}
+					}
 				}
+				return false;
 			}
 		}; // pwp_boxes
 
