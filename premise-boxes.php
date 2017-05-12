@@ -3,7 +3,7 @@
  * Plugin Name: Premise Boxes
  * Description: This plugin is an attempt at reducing the gap there is between developers and project/content managers. The idea is to provide a UI that is user friendly for the ones who do not code, yet offer a code editor for developers who sometimes feel it is easier to make changes writting code. The concept is simple: You can insert content using the WYSIWYG eiditor but wrap that content with custom HTML. This is wher the gap with developers gets shorten! Premise Boxes offers a code editor that allows developers to enter HTML code and use the variable %%CONTENT%% to insert the content from the Project/Content manager into the markup. It allows for both sides to work togehter and support each other!
  * Plugin URI:  https://premisewp.com/premise-portfolio/premise-boxes/
- * Version:     1.0.8
+ * Version:     1.0.9
  * Author:      @premisewp
  * Author URI:  http://premisewp.com
  * License:     GPL

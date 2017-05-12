@@ -49,6 +49,9 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= v1.0.9 =
+* Fixed issue that prevented from editing a box. Instead it would create a new one everytime.
+
 = v1.0.8 =
 * Ensure shortcode self closes to avoid conflicts with other boxes in the page.
 * Styled boxes in the editor so it is easy to recognize where there is a box inserted in the content.
