@@ -76,7 +76,6 @@
 						console.log('We do not have content');
 						editor.insertContent( pboxesInsertShortcode( getSetFields() ) );
 					}
-
 					closeDialog();
 					return false;
 				});
