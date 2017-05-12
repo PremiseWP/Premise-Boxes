@@ -33,49 +33,44 @@
 				var shortcode_data = wp.shortcode.next(shortcode_string, data);
 				var values = shortcode_data.shortcode.attrs.named;
 				values.pbox_innercontent = shortcode_data.shortcode.content || '';
-				wp.mce.pwp_boxes.popupwindow(tinyMCE.activeEditor, values);
+				wp.mce.pwp_boxes.popupwindow(tinyMCE.get('content'), values);
 			},
 
 			// this is called from our tinymce plugin, also can call from our "edit" function above
-			popupwindow: function( editor, values, onsubmit_callback ) {
+			popupwindow: function( editor, values ) {
 				editor = editor || null;
-				values = values || {}; // console.log( values );
+				values = values || {};
 
+				// reference static objects for efficiency
 				var theForm   = $( '#pboxes-dialog-form' ),
 				dialogSubmit  = $('#pboxes-submit-box'),
 				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 
-				var _selected = editor.selection;
-
-				// theForm.focus();
-
-				// set our callback
-				if ( typeof onsubmit_callback !== 'function' ) {
-					onsubmit_callback = pboxesInsertShortcode;
-				};
+				// get the bookmark where the cursor was
+				// if there is content selected the bookmark
+				// will help us replace it.
+				var _bookmark     = editor.selection.getBookmark();
+				var _bookmarkHTML = $(editor.dom.doc).find('[data-mce-type="bookmark"]');
 
 				// If we have values, enter them into our form
 				if ( Object.keys( values ).length ) {
 					getSetFields( values );
 				};
-				setTimeout( function(){
-					console.log(_selected.getContent() );
-				}, 5000);
-				console.log(_selected.getContent() );
-				// tinyMCE.get('content').selection.setContent('test');
+
 				// bind submit button
 				dialogSubmit.off().click(function(e){
 					e.preventDefault();
-					console.log(_selected );
-					// tinyMCE.get('content').selection.setContent('test');
-					if ( _selected ) {
-						console.log('We have content');
-						_selected.setContent( pboxesInsertShortcode( getSetFields() ) );
+
+					// if we have a bookmark insert/replace our content
+					if ( _bookmark ) {
+						editor.selection.moveToBookmark( _bookmark.id );
+						editor.selection.setContent( pboxesInsertShortcode( getSetFields() ) );
 					}
+					// no bookmark, simply insert
 					else {
-						console.log('We do not have content');
 						editor.insertContent( pboxesInsertShortcode( getSetFields() ) );
 					}
+
 					closeDialog();
 					return false;
 				});
@@ -85,7 +80,6 @@
 
 				// open our dialog
 				pboxesDialog.fadeIn( 'fast' );
-
 
 				/*
 					Helpers
@@ -123,6 +117,7 @@
 
 				// cloase the dialog
 				function closeDialog() {
+					if ( _bookmarkHTML.length ) _bookmarkHTML.parent().remove();
 					pboxesDialog.fadeOut( 'fast' );
 					resetTheForm();
 				}
