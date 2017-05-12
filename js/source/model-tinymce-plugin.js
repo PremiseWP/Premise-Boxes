@@ -49,8 +49,10 @@
 				// get the bookmark where the cursor was
 				// if there is content selected the bookmark
 				// will help us replace it.
-				var _bookmark     = editor.selection.getBookmark();
-				var _bookmarkHTML = $(editor.dom.doc).find('[data-mce-type="bookmark"]');
+				if ( editor.selection.getContent().length ) {
+					var _bookmark     = editor.selection.getBookmark();
+					var _bookmarkHTML = $(editor.dom.doc).find('[data-mce-type="bookmark"]');
+				}
 
 				// If we have values, enter them into our form
 				if ( Object.keys( values ).length ) {
@@ -104,20 +106,15 @@
 						content : _cont,
 						attrs   : attrs,
 					};
-
-					// insert shortcode
-					// editor.insertContent( wp.shortcode.string( args ) );
-
 					// reset the form
 					resetTheForm();
 
-					console.log('the shortcode to insert:' + wp.shortcode.string( args ));
 					return wp.shortcode.string( args );
 				};
 
 				// cloase the dialog
 				function closeDialog() {
-					if ( _bookmarkHTML.length ) _bookmarkHTML.parent().remove();
+					if ( _bookmarkHTML && _bookmarkHTML.length ) _bookmarkHTML.parent().remove();
 					pboxesDialog.fadeOut( 'fast' );
 					resetTheForm();
 				}
@@ -188,8 +185,6 @@
 
 					// get the content
 					function tmce_getContent(editor_id, textarea_id) {
-						console.log( editor_id );
-						console.log( textarea_id );
 						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
 						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
 
