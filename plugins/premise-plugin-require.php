@@ -48,7 +48,7 @@ function pboxes_require_premise_wp() {
 		array(
 			'name'               => 'Premise WP Plugin', // The plugin name.
 			'slug'               => 'Premise-WP', // The plugin slug (typically the folder name).
-			'source'             => plugins_url('Premise-WP/plugins/Premise-WP.zip'), // The plugin source.
+			'source'             => 'https://github.com/PremiseWP/Premise-WP/archive/master.zip', // The plugin source.
 			'required'           => true, // If false, the plugin is only 'recommended' instead of required.
 			'version'            => '2.0.0', // E.g. 1.0.0. If set, the active plugin must be this version or higher. If the plugin version is higher than the plugin version installed, the user will be notified to update the plugin.
 			'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
