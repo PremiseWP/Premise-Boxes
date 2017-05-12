@@ -38,14 +38,14 @@
 
 			// this is called from our tinymce plugin, also can call from our "edit" function above
 			popupwindow: function( editor, values, onsubmit_callback ) {
-				editor = editor || wpActiveEditor;
+				editor = editor || null;
 				values = values || {}; // console.log( values );
 
 				var theForm   = $( '#pboxes-dialog-form' ),
 				dialogSubmit  = $('#pboxes-submit-box'),
-				dialog_editor = tinyMCE.get( 'pbox_innercontent' ),
+				dialog_editor = tinyMCE.get( 'pbox_innercontent' );
 
-				_selected = editor.selection;
+				var _selected = editor.selection;
 
 				// theForm.focus();
 
@@ -58,11 +58,25 @@
 				if ( Object.keys( values ).length ) {
 					getSetFields( values );
 				};
-
+				setTimeout( function(){
+					console.log(_selected.getContent() );
+				}, 5000);
+				console.log(_selected.getContent() );
+				// tinyMCE.get('content').selection.setContent('test');
 				// bind submit button
 				dialogSubmit.off().click(function(e){
 					e.preventDefault();
-					onsubmit_callback( getSetFields() );
+					console.log(_selected );
+					// tinyMCE.get('content').selection.setContent('test');
+					if ( _selected ) {
+						console.log('We have content');
+						_selected.setContent( pboxesInsertShortcode( getSetFields() ) );
+					}
+					else {
+						console.log('We do not have content');
+						editor.insertContent( pboxesInsertShortcode( getSetFields() ) );
+					}
+
 					closeDialog();
 					return false;
 				});
@@ -80,17 +94,16 @@
 
 				// inesrt the shortcode
 				function pboxesInsertShortcode( _data ) {
-console.log(_selected.getContent());
 					// get the form
 					var attrs = {}, _cont = '', args = {};
 
 					// build attributes object
-					$.map( _data, pboxesBuildAttrs );
-
+					$.map( _data, function( $n ) {
+						attrs[$n.name] = $n.value;
+					} );
 					// set content and remove the innercontent param
 					_cont = attrs.pbox_innercontent;
 					delete attrs.pbox_innercontent;
-
 					// build arguments for shortcode
 					args = {
 						tag     : shortcode_string,
@@ -100,59 +113,27 @@ console.log(_selected.getContent());
 					};
 
 					// insert shortcode
-					editor.insertContent( wp.shortcode.string( args ) );
+					// editor.insertContent( wp.shortcode.string( args ) );
 
 					// reset the form
-					theForm[0].reset();
-					dialog_editor && dialog_editor.setContent( '' );
+					resetTheForm();
 
-					// build attributes
-					function pboxesBuildAttrs( $n ) {
-						attrs[$n.name] = $n.value;
-					};
+					console.log('the shortcode to insert:' + wp.shortcode.string( args ));
+					return wp.shortcode.string( args );
 				};
 
 				// cloase the dialog
 				function closeDialog() {
 					pboxesDialog.fadeOut( 'fast' );
+					resetTheForm();
+				}
+
+				// resets the form
+				// cleans up the editor and codemirror
+				function resetTheForm() {
 					theForm[0].reset();
+					pboxWrapper   && pboxWrapper.setValue( '' );
 					dialog_editor && dialog_editor.setContent( '' );
-				}
-
-				// get the content
-				function tmce_getContent(editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).getContent();
-					}else{
-						return jQuery('#'+textarea_id).val();
-					}
-				}
-
-				// set the content
-				function tmce_setContent(content, editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).setContent(content);
-					}else{
-						return jQuery('#'+textarea_id).val(content);
-					}
-				}
-
-				// focus on the editor
-				function tmce_focus(editor_id, textarea_id) {
-					if ( typeof editor_id == 'undefined' ) editor_id = wpActiveEditor;
-					if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
-
-					if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
-						return tinyMCE.get(editor_id).focus();
-					}else{
-						return jQuery('#'+textarea_id).focus();
-					}
 				}
 
 				// get or set our fields.
@@ -209,6 +190,44 @@ console.log(_selected.getContent());
 
 					if ( returnFields.length ) {
 						return returnFields;
+					}
+
+					// get the content
+					function tmce_getContent(editor_id, textarea_id) {
+						console.log( editor_id );
+						console.log( textarea_id );
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).getContent();
+						}else{
+							return jQuery('#'+textarea_id).val();
+						}
+					}
+
+					// set the content
+					function tmce_setContent(content, editor_id, textarea_id) {
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).setContent(content);
+						}else{
+							return jQuery('#'+textarea_id).val(content);
+						}
+					}
+
+					// focus on the editor
+					function tmce_focus(editor_id, textarea_id) {
+						if ( typeof editor_id == 'undefined' ) return false; //editor_id = wpActiveEditor;
+						if ( typeof textarea_id == 'undefined' ) textarea_id = editor_id;
+
+						if ( jQuery('#wp-'+editor_id+'-wrap').hasClass('tmce-active') && tinyMCE.get(editor_id) ) {
+							return tinyMCE.get(editor_id).focus();
+						}else{
+							return jQuery('#'+textarea_id).focus();
+						}
 					}
 				}
 				return false;
