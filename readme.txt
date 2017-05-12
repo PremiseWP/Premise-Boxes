@@ -49,6 +49,9 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= v1.0.10 =
+* Fixed location from where premise wp is required to install. Change to GitHub.
+
 = v1.0.9 =
 * Fixed issue that prevented from editing a box. Instead it would create a new one everytime.
 
