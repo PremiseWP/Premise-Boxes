@@ -49,6 +49,9 @@ The Github project can be found [here](https://github.com/PremiseWP/Premise-Boxe
 
 == Changelog ==
 
+= v1.0.11 =
+* Update to fix some minor bugs.
+
 = v1.0.10 =
 * Fixed location from where premise wp is required to install. Change to GitHub.
 
