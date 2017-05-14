@@ -97,14 +97,14 @@ class PBoxes_Tinymce_Plugin {
 						</span>
 					</div>
 				</div>
-				<h2>Premise Box</h2>
+				<h2>Insert Box</h2>
 			</div>
 			<div class="pboxes-dialog-body">
 				<form id="pboxes-dialog-form" action="" method="post">
 
 						<div id="pboxes-content-editor">
 							<div class="pwp-align-right">
-								<a href="javascript:void(0);" class="pboxes-toggle-editors pwp-inline-block">Toggle Editors</a>
+								<a href="javascript:void(0);" class="pboxes-toggle-editors pwp-inline-block">Code Editor</a>
 							</div>
 
 							<div class="pboxes-wysiwyg-editor span12 pboxes-show">

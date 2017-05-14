@@ -18,12 +18,14 @@
 
 		// show the code editor
 		showCodeEditor: function( context ) {
+			context.find('.pboxes-toggle-editors').text('Content Editor');
 			context.find('.pboxes-wysiwyg-editor').removeClass('pboxes-show');
 			context.find('.pboxes-code-editor').addClass('pboxes-show');
 		},
 
 		// show the WYSIWYG editor
 		showWYSIWYGEditor: function( context ) {
+			context.find('.pboxes-toggle-editors').text('Code Editor');
 			context.find('.pboxes-code-editor').removeClass('pboxes-show');
 			context.find('.pboxes-wysiwyg-editor').addClass('pboxes-show');
 		},
